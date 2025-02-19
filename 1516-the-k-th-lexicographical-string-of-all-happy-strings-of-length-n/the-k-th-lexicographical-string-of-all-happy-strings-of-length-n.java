@@ -25,29 +25,29 @@ class Solution {
 }
 
 // class Solution {
-// List<String> list = new ArrayList<>();
+//     List<String> list = new ArrayList<>();
 
-// public String getHappyString(int n, int k) {
-// String currStr = "";
-//if (list.sizw() < k) return "";
-// backtrack(n, currStr);
-// Collections.sort(list);
-// return (k > list.size()) ? list.get(k - 1) : "";
-// }
+//     public String getHappyString(int n, int k) {
+//         String currStr = "";
+//         backtrack(n, currStr);
+//         if (list.size() < k)
+//             return "";
+//         Collections.sort(list);
+//         return list.get(k - 1);
+//     }
 
-// public void backtrack(int n, String currStr) {
-// if (currStr.length() == n) {
-// list.add(currStr);
-// return;
-// }
+//     public void backtrack(int n, String currStr) {
+//         if (currStr.length() == n) {
+//             list.add(currStr);
+//             return;
+//         }
 
-// for (char currChar = 'a'; currChar <= 'c'; currChar++) {
-// if (currStr.length() > 0 && currStr.charAt(currStr.length() - 1) == currChar)
-// {
-// continue;
-// } else {
-// backtrack(n, currStr + currChar);
-// }
-// }
-// }
+//         for (char currChar = 'a'; currChar <= 'c'; currChar++) {
+//             if (currStr.length() > 0 && currStr.charAt(currStr.length() - 1) == currChar) {
+//                 continue;
+//             } else {
+//                 backtrack(n, currStr + currChar);
+//             }
+//         }
+//     }
 // }
