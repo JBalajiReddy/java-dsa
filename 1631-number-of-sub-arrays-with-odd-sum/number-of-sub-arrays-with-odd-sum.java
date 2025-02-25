@@ -8,6 +8,10 @@ class Solution {
 
         for (int num : arr) {
             sum += num;
+            // If prefixSum is odd, the subarray sum from the start to the current index is
+            // odd. To form another odd subarray, we need to subtract a previously seen even
+            // prefix sum. So, we add the count of previously seen even prefix sums to our
+            // answer.
             if (sum % 2 != 0) {
                 count = (count + evenCount) % MOD;
                 oddCount++;
