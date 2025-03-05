@@ -14,10 +14,10 @@ class Solution {
         return provinces;
     }
 
-    public void dfs(int node, int[][] isConnected, boolean[] visit) {
-        visit[node] = true;
+    public void dfs(int city, int[][] isConnected, boolean[] visit) {
+        visit[city] = true;
         for (int i = 0; i < n; i++) {
-            if (isConnected[node][i] == 1 && !visit[i]) {
+            if (isConnected[city][i] == 1 && !visit[i]) {
                 dfs(i, isConnected, visit);
             }
         }
