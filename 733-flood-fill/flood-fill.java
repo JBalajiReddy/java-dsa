@@ -7,15 +7,15 @@ class Solution {
         return image;
     }
 
-    public void dfs(int[][] image, int r, int c, int color, int nColor) {
+    public void dfs(int[][] image, int r, int c, int req_color, int nColor) {
         if (r < 0 || r >= image.length || c < 0 || c >= image[0].length || image[r][c] != nColor)
             return;
 
-        image[r][c] = color;
+        image[r][c] = req_color;
 
-        dfs(image, r + 1, c, color, nColor);
-        dfs(image, r - 1, c, color, nColor);
-        dfs(image, r, c + 1, color, nColor);
-        dfs(image, r, c - 1, color, nColor);
+        dfs(image, r + 1, c, req_color, nColor);
+        dfs(image, r - 1, c, req_color, nColor);
+        dfs(image, r, c + 1, req_color, nColor);
+        dfs(image, r, c - 1, req_color, nColor);
     }
 }
