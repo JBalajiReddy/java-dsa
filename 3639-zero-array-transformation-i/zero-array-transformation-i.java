@@ -3,9 +3,9 @@ class Solution {
     public boolean isZeroArray(int[] nums, int[][] queries) {
         int n = nums.length;
         int[] diff = new int[n + 1];
-        for (int idx[] : queries) {
-            int l = idx[0];
-            int r = idx[1];
+        for (int query[] : queries) {
+            int l = query[0];
+            int r = query[1];
             diff[l]--;
             if (r + 1 < n)
                 diff[r + 1]++;
