@@ -21,8 +21,10 @@ class Solution {
 
     public int minZeroArray(int[] nums, int[][] queries) {
         int left = 0, right = queries.length;
+        // Check if it's possible to make the array zero with all queries
         if(!isZeroArray(nums, queries, right)) return -1;
-
+        
+        // Binary search to find the minimum number of queries needed
         while(left <= right) {
             int mid = left + (right - left) / 2;
             if(isZeroArray(nums, queries, mid)) right = mid -1;
