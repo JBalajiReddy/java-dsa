@@ -25,7 +25,7 @@ class Solution {
         while (!queue.isEmpty()) {
             int qSize = queue.size();
             for (int i = 0; i < qSize; i++) {
-                int sameParentCount = 0;
+                int sameParentCount = 0;  //resets for every level
                 TreeNode node = queue.poll();
                 if (node.left != null) {
                     if (node.left.val == x || node.left.val == y) {
