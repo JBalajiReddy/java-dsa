@@ -6,7 +6,7 @@ class Solution {
             maxCandy = Math.max(maxCandy, candy);
         }
 
-        int left = 1;
+        int left = 1; //min 1 candy
         int right = maxCandy;
         while (left <= right) {
             int mid = left + (right - left) / 2;
