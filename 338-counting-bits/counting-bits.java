@@ -6,3 +6,10 @@ class Solution {
         return dp;
     }
 }
+
+// Alternate O(nlogn) approach to calculate numbers of 1's
+
+// while(n > 0) {
+//     n = n & n - 1;
+//     c++;
+// }
