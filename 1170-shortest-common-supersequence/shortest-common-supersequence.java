@@ -1,53 +1,52 @@
 class Solution {
-    public String findLCS(String s1, String s2) {
-        int m = s1.length();
-        int n = s2.length();
-        String[] dp = new String[n + 1];
-        
-        for (int j = 0; j <= n; j++) {
-            dp[j] = "";
-        }
+    public int[][] findLCS(String s1, String s2) {
+        int n = s1.length();
+        int m = s2.length();
+        int dp[][] = new int[n + 1][m + 1];
+        dp[0][0] = 0;
 
-        for (int i = 1; i <= m; i++) {
-            String[] newDp = new String[n + 1];
-            for (int j = 0; j <= n; j++) {
-                if (j == 0) {
-                    newDp[j] = "";
-                } else if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
-                    newDp[j] = dp[j - 1] + s1.charAt(i - 1);
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 1; j < m + 1; j++) {
+                if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
                 } else {
-                    newDp[j] = (newDp[j - 1].length() > dp[j].length()) ? newDp[j - 1] : dp[j];
+                    int case1 = dp[i - 1][j];
+                    int case2 = dp[i][j - 1];
+                    dp[i][j] = Math.max(case1, case2);
                 }
             }
-            dp = newDp; // Move to the next row
         }
-        return dp[n];
+        return dp;
     }
 
     public String shortestCommonSupersequence(String str1, String str2) {
-        String lcs = findLCS(str1, str2);
-        StringBuilder res = new StringBuilder();
-        int p1 = 0, p2 = 0;
-
-        for (char c : lcs.toCharArray()) {
-            // add non-lcs elements from str1 to res
-            while (p1 < str1.length() && str1.charAt(p1) != c) {
-                res.append(str1.charAt(p1));
-                p1++;
+        int dp[][] = findLCS(str1, str2);
+        int n = dp.length;
+        int m = dp[0].length;
+        int i = n - 1;
+        int j = m - 1;
+        StringBuilder sb = new StringBuilder();
+        while (i > 0 && j > 0) {
+            if (str1.charAt(i - 1) == str2.charAt(j - 1)) { //lcs
+                sb.append(str1.charAt(i - 1));
+                i--;
+                j--;
+            } else if (dp[i - 1][j] > dp[i][j - 1]) {
+                sb.append(str1.charAt(i - 1));
+                i--;
+            } else {
+                sb.append(str2.charAt(j - 1));
+                j--;
             }
-            // add non-lcs elements from str2 to res
-            while (p2 < str2.length() && str2.charAt(p2) != c) {
-                res.append(str2.charAt(p2));
-                p2++;
-            }
-            // add LCS elements
-            res.append(c);
-            p1++;
-            p2++;
         }
-        // Append remaining characters from str1 or str2
-        res.append(str1.substring(p1));
-        res.append(str2.substring(p2));
-        return res.toString();
+        while (i > 0) {
+            sb.append(str1.charAt(i - 1));
+            i--;
+        }
+        while (j > 0) {
+            sb.append(str2.charAt(j - 1));
+            j--;
+        }
+        return sb.reverse().toString();
     }
 }
