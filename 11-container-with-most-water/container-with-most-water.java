@@ -9,8 +9,12 @@ class Solution {
             maxArea = Math.max(maxArea, currArea);
             if (height[start] < height[end])
                 start++;
-            else
+            else if (height[start] > height[end])
                 end--;
+            else {
+                start++;
+                end--;
+            }
         }
         return maxArea;
     }
