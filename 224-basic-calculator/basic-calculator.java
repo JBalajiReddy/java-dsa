@@ -1,9 +1,6 @@
 class Solution {
     public int calculate(String s) {
-
-        if (s == null)
-            return 0;
-
+        
         Stack<Integer> stack = new Stack<>();
         int res = 0, num = 0, sign = 1;
 
