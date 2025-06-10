@@ -1,20 +1,16 @@
 class Solution {
+
     public int maxDifference(String s) {
-        Map<Character, Integer> map = new HashMap<>();
+        Map<Character, Integer> c = new HashMap<>();
         for (char ch : s.toCharArray()) {
-            map.put(ch, map.getOrDefault(ch, 0) + 1);
+            c.put(ch, c.getOrDefault(ch, 0) + 1);
         }
-        int maxOdd = -1, minEven = Integer.MAX_VALUE;
-        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
-            int val = entry.getValue();
-            if (val % 2 == 0) {
-                if (minEven > val) {
-                    minEven = val;
-                }
+        int maxOdd = 1, minEven = s.length();
+        for (int value : c.values()) {
+            if (value % 2 == 1) {
+                maxOdd = Math.max(maxOdd, value);
             } else {
-                if (maxOdd < val) {
-                    maxOdd = val;
-                }
+                minEven = Math.min(minEven, value);
             }
         }
         return maxOdd - minEven;
