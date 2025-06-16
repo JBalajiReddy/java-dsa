@@ -32,9 +32,9 @@ class Solution {
                 TreeNode node = q.poll();
 
                 if (leftToRight)
-                    lvlNodes.addLast(node.val); // Left to right (normal order)
+                    lvlNodes.addLast(node.val); // Even level (left-to-right)
                 else
-                    lvlNodes.addFirst(node.val); // Right to left (reverse order)
+                    lvlNodes.addFirst(node.val); // Odd level (right-to-left)
 
                 if (node.left != null)
                     q.offer(node.left);
