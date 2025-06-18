@@ -20,7 +20,8 @@ class Node {
 
 class Solution {
     public Node cloneGraph(Node node) {
-        if (node == null) return node;
+        if (node == null)
+            return node;
 
         Map<Node, Node> map = new HashMap<>();
         Queue<Node> q = new LinkedList<>();
@@ -30,14 +31,17 @@ class Solution {
 
         while (!q.isEmpty()) {
             Node curr = q.poll();
+
             for (Node neighbor : curr.neighbors) {
                 if (!map.containsKey(neighbor)) {
+                    // Create a clone of the neighbor
                     map.put(neighbor, new Node(neighbor.val));
                     q.offer(neighbor);
                 }
+                // Connect the cloned neighbor to the cloned current node
                 map.get(curr).neighbors.add(map.get(neighbor));
             }
         }
-        return map.get(node); //head
+        return map.get(node);
     }
 }
