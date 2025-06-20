@@ -1,27 +1,51 @@
 class Solution {
     public int snakesAndLadders(int[][] board) {
         int n = board.length;
-        int[] min_rolls = new int[n * n + 1];
-        Arrays.fill(min_rolls, -1);
-        Queue<Integer> q = new LinkedList<>();
-        min_rolls[1] = 0;
-        q.offer(1);
+        boolean visited[][] = new boolean[n][n];
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(1);
+        visited[n - 1][0] = true;
+        int minSteps = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int currVal = queue.poll();
 
-        while (!q.isEmpty()) {
-            int x = q.poll();
-            for (int i = 1; i <= 6 && x + i <= n * n; i++) {
-                int t = x + i;
-                int row = (t - 1) / n;
-                int col = (t - 1) % n;
-                int v = board[n - 1 - row][(row % 2 == 1) ? (n - 1 - col) : col];
-                int y = (v > 0 ? v : t);
-                if (y == n * n) return min_rolls[x] + 1;
-                if (min_rolls[y] == -1) {
-                    min_rolls[y] = min_rolls[x] + 1;
-                    q.offer(y);
+                if (currVal == n * n)
+                    return minSteps;
+
+                for (int diceValue = 1; diceValue <= 6; diceValue++) {
+
+                    if (diceValue + currVal > n * n)
+                        continue;
+                    int pos[] = findCoordinates(diceValue + currVal, n);
+                    int row = pos[0];
+                    int col = pos[1];
+                    if (visited[row][col] == true)
+                        continue;
+
+                    visited[row][col] = true;
+
+                    if (board[row][col] == -1)
+                        queue.add(diceValue + currVal);
+                    else
+                        queue.add(board[row][col]);
                 }
             }
+            minSteps++;
         }
         return -1;
+    }
+
+    private int[] findCoordinates(int currVal, int n) {
+
+        int r = n - (currVal - 1) / n - 1;
+        int c = (currVal - 1) % n;
+
+        if (r % 2 == n % 2)
+            return new int[] { r, n - 1 - c };
+
+        else
+            return new int[] { r, c };
     }
 }
