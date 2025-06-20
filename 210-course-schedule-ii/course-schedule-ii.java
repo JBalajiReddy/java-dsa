@@ -1,28 +1,27 @@
 class Solution {
     public int[] findOrder(int numCourses, int[][] prerequisites) {
         int[] inDegree = new int[numCourses];
-        //Course        neigh-Courses
+        //Courses, neighbors
         Map<Integer, Set<Integer>> map = new HashMap<>();
+
         for (int i = 0; i < numCourses; i++) {
             map.put(i, new HashSet<>());
         }
 
+        //forming edges
         for (int[] p : prerequisites) {
             int dCourse = p[0];
             int course = p[1];
-            //course -> dCourse 
-            map.get(course).add(dCourse);
+            map.get(course).add(dCourse); //course -> dCourse
             inDegree[dCourse]++;
         }
 
         Queue<Integer> q = new LinkedList<>();
         for (int i = 0; i < numCourses; i++) {
-            if (inDegree[i] == 0) {
-                q.offer(i);
-            }
+            if (inDegree[i] == 0)
+                q.offer(i); //add node if in-degree is 0
         }
 
-        //order
         List<Integer> ls = new ArrayList<>();
         while (!q.isEmpty()) {
             int size = q.size();
@@ -35,7 +34,7 @@ class Solution {
                 for (int neigh : map.get(head)) {
                     inDegree[neigh]--;
                     if (inDegree[neigh] == 0)
-                        q.offer(neigh);
+                        q.offer(neigh); //add neigh to queue if in-degree is 0
                 }
             }
         }
