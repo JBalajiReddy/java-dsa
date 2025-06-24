@@ -1,29 +1,30 @@
 class Solution {
     public int[] findMissingAndRepeatedValues(int[][] grid) {
-        HashMap<Integer, Integer> map = new HashMap<>();
-        int grid_sum = 0;
-        int[] res = new int[2];
-        for (int[] num : grid) {
-            for (int i = 0; i < num.length; i++) {
-                map.put(num[i], map.getOrDefault(num[i], 0) + 1);
-                grid_sum += num[i];
+        int n = grid.length;
+       // Map<Integer, Integer> mp = new HashMap<>();
+       int[] freq = new int[(n * n) + 1];
+        int gSum = 0;
+        for (int[] g : grid) {
+            for (int i = 0; i < g.length; i++) {
+                // mp.put(num, mp.getOrDefault(num, 0) + 1);
+                freq[g[i]]++;
+                gSum += g[i];
             }
         }
-        int n = grid.length * grid[0].length;
-        int actual_sum = n * (n + 1) / 2;
-        int repeat_no = getKeyByValue(map, 2);
-        int missing_no = repeat_no - (grid_sum - actual_sum);
-        res[0] = repeat_no;
-        res[1] = missing_no;
-        return res;
+       int repeatedVal = getMaxFreq(freq);
+       int actualSum = (n * n * (n * n + 1)) / 2;
+       int missingVal = actualSum - (gSum - repeatedVal);
+       return new int[]{repeatedVal, missingVal};
     }
 
-    private Integer getKeyByValue(HashMap<Integer, Integer> map, int value) {
-        for (HashMap.Entry<Integer, Integer> entry : map.entrySet()) {
-            if (entry.getValue() == value) {
-                return entry.getKey();
+    private int getMaxFreq(int[] freq) {
+        int n = 0; 
+        for (int i = 0; i < freq.length; i++) {
+            if (freq[i] == 2 || freq[i] > 1) { 
+                n = i;
+                break;
             }
         }
-        return null;
+        return n;
     }
 }
