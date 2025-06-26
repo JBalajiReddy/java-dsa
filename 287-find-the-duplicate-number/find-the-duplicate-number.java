@@ -8,7 +8,7 @@ class Solution {
             fast = nums[nums[fast]]; // +2
         } while (slow != fast);
 
-        slow = nums[0];
+        slow = nums[0]; //reset slow ptr
 
         while (slow != fast) {
             slow = nums[slow]; // +1
