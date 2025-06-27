@@ -8,28 +8,21 @@ class Solution {
         int idx = 0;
 
         for (int i = 0; i < n; i++) {
-            // Remove out-of-bound indices
-            if (!dq.isEmpty() && dq.getFirst() <= i - k) {
+
+            if (!dq.isEmpty() && dq.getFirst() <= i - k) // remove out-of-bound indices
                 dq.removeFirst();
-            }
-
-            // Maintain descending order in deque
-            while (!dq.isEmpty() && nums[dq.getLast()] < nums[i]) {
+            while (!dq.isEmpty() && nums[dq.getLast()] < nums[i])  // Maintain descending order in deque
                 dq.removeLast();
-            }
-
+          
             dq.addLast(i);
 
-            // Start adding to result once the first window is hit
-            if (i >= k - 1) {
-                res[idx++] = nums[dq.getFirst()];
-            }
+            if (i >= k - 1)
+                res[idx++] = nums[dq.getFirst()]; // Start adding to result once the first window is hit
         }
 
         return res;
     }
 }
-
 
 // class Solution {
 //     public int[] maxSlidingWindow(int[] nums, int k) {
