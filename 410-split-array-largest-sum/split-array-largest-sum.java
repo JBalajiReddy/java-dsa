@@ -1,0 +1,29 @@
+class Solution {
+    public int splitArray(int[] nums, int k) {
+        int st = Arrays.stream(nums).max().orElse(0);
+        int end = Arrays.stream(nums).sum();
+        while (st <= end) {
+            int mid = st + (end - st) / 2;
+            int count = countSubarraysWithMaxSumLimit(nums, mid);
+            if (count > k)
+                st = mid + 1;
+            else
+                end = mid - 1;
+        }
+        return st;
+    }
+
+    private int countSubarraysWithMaxSumLimit(int[] nums, int maxAllowedSum) {
+        int c = 1;
+        long sum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (sum + nums[i] <= maxAllowedSum)
+                sum += nums[i];
+            else {
+                c += 1;
+                sum = nums[i];
+            }
+        }
+        return c;
+    }
+}
