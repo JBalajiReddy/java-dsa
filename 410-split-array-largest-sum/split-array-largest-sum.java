@@ -5,6 +5,9 @@ class Solution {
         while (st <= end) {
             int mid = st + (end - st) / 2;
             int count = countSubarraysWithMaxSumLimit(nums, mid);
+            //Check: Can we split the array into ≤ k subarrays such that no subarray sum exceeds mid?
+            //If yes → try smaller max
+            //If no → we need a bigger max sum
             if (count > k)
                 st = mid + 1;
             else
