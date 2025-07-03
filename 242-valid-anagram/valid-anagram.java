@@ -1,18 +1,43 @@
+//unicode
 public class Solution {
     public boolean isAnagram(String s, String t) {
-        if (s.length() != t.length())
-            return false;
-        int[] a = new int[26];
-        for (Character c : s.toCharArray())
-            a[c - 'a']++;
-        for (Character c : t.toCharArray()) {
-            if (a[c - 'a'] == 0)
-                return false;
-            a[c - 'a']--;
+        if (s.length() != t.length()) return false;
+
+        Map<Character, Integer> map = new HashMap<>();
+
+        // Count characters in string s
+        for (char c : s.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
         }
+
+        // Subtract using characters from string t
+        for (char c : t.toCharArray()) {
+            if (!map.containsKey(c) || map.get(c) == 0) {
+                return false;
+            }
+            map.put(c, map.get(c) - 1);
+        }
+
         return true;
     }
 }
+
+
+// public class Solution {
+//     public boolean isAnagram(String s, String t) {
+//         if (s.length() != t.length())
+//             return false;
+//         int[] f = new int[26];
+//         for (Character c : s.toCharArray())
+//             f[c - 'a']++;
+//         for (Character c : t.toCharArray()) {
+//             if (f[c - 'a'] == 0)
+//                 return false;
+//             f[c - 'a']--;
+//         }
+//         return true;
+//     }
+// }
 
 // class Solution {
 //     public boolean isAnagram(String s, String t) {
