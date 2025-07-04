@@ -10,6 +10,13 @@ class Solution {
             String sortedW = new String(sortChars);
 
             map.computeIfAbsent(sortedW, k -> new ArrayList<>()).add(word);
+
+            //equi to the following
+            // if (!map.containsKey(sortedW)) {
+            //     map.put(sortedW, new ArrayList<>());
+            // }
+            // map.get(sortedW).add(word);
+
         }
 
         return new ArrayList<>(map.values());
