@@ -21,7 +21,7 @@ class Solution {
                     chars[idx++] = digit;
             }
 
-            i--;
+            i--; //to balance the i++ inside the for loop
         }
         return idx;
     }
