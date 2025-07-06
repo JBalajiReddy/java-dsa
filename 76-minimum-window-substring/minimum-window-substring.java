@@ -1,45 +1,55 @@
 class Solution {
     public String minWindow(String s, String t) {
-        if (s.length() < t.length())
+        int n1 = s.length();
+        int n2 = t.length();
+        if (n2 > n1)
             return "";
-        if (s == t)
+        if (s.equals(t))
             return s;
 
-        Map<Character, Integer> totalCts = new HashMap<>();
-        for (char ch : t.toCharArray()) {
-            totalCts.put(ch, totalCts.getOrDefault(ch, 0) + 1);
+        int l = 0;
+        int r = 0; 
+        Map<Character, Integer> map = new HashMap<>(); 
+        int cnt = 0; 
+        int sIdx = -1; 
+        int minLen = Integer.MAX_VALUE;
+        String res = ""; 
+
+        for (int i = 0; i < n2; i++) {
+            map.put(t.charAt(i), map.getOrDefault(t.charAt(i), 0) + 1);
         }
 
-        int req = totalCts.size();
-        int formed = 0;
-        int left = 0, right = 0;
-        int minLeft = 0, minLen = Integer.MAX_VALUE;
-        Map<Character, Integer> currCts = new HashMap<>();
+        while (r < n1) {
+            char ch = s.charAt(r);
 
-        while (right < s.length()) {
-            char currChar = s.charAt(right);
-            currCts.put(currChar, currCts.getOrDefault(currChar, 0) + 1);
-            if (totalCts.containsKey(currChar) &&
-                    currCts.get(currChar).intValue() == totalCts.get(currChar).intValue()) {
-                formed++;
-            }
-            while (left <= right && formed == req) {
-                char leftChar = s.charAt(left);
-                if (right - left + 1 < minLen) {
-                    minLen = right - left + 1;
-                    minLeft = left;
-                }
-                currCts.put(leftChar, currCts.get(leftChar) - 1);
-                if (totalCts.containsKey(leftChar) &&
-                        currCts.get(leftChar).intValue() < totalCts.get(leftChar).intValue()) {
-                    formed--;
+            // If it's a required character and still needed, count it
+            if (map.containsKey(ch) && map.get(ch) > 0)
+                cnt++;
+
+            map.put(ch, map.getOrDefault(ch, 0) - 1);
+
+            // If all required characters are matched
+            while (cnt == n2) {
+                if (r - l + 1 < minLen) {
+                    minLen = r - l + 1;
+                    sIdx = l;
                 }
 
-                left++;
+                // Try to shrink the window from the left
+                char leftChar = s.charAt(l);
+                map.put(leftChar, map.getOrDefault(leftChar, 0) + 1);
+
+                // If after incrementing, the character is required again, decrement count
+                //If a required character is lost (map.get(s[l]) > 0), decrement cnt.
+                if (map.get(leftChar) > 0)
+                    cnt--;
+
+                l++; 
             }
 
-            right++;
+            r++; 
         }
-        return minLen == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLen);
+
+        return sIdx == -1 ? "" : s.substring(sIdx, sIdx + minLen);
     }
 }
