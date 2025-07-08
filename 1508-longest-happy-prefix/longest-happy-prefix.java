@@ -1,13 +1,13 @@
-//KMP algorithm
+//KMP algorithm - longest prefix suffix
 class Solution {
     public String longestPrefix(String s) {
-        int dp[] = new int[s.length()];
+        int lps[] = new int[s.length()];
         int j = 0;
         for (int i = 1; i < s.length(); i++) {
             if (s.charAt(j) == s.charAt(i)) {
-                dp[i] = ++j;
+                lps[i] = ++j;
             } else if (j > 0) {
-                j = dp[j - 1];
+                j = lps[j - 1];
                 --i; //counter the for loop's i++
             }
         }
