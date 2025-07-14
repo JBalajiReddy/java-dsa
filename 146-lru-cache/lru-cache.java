@@ -1,78 +1,72 @@
 class LRUCache {
     class Node {
-        int key, value;
+        int key, val;
         Node prev, next;
 
-        Node(int k, int v) {
-            key = k;
-            value = v;
+        Node(int key, int val) {
+            this.key = key;
+            this.val = val;
         }
     }
 
     private int capacity;
-    private Map<Integer, Node> cache;
-    private Node head, tail;
+    private HashMap<Integer, Node> map;
+    private Node head;
+    private Node tail;
 
     public LRUCache(int capacity) {
         this.capacity = capacity;
-        cache = new HashMap<>();
-
-        // Dummy head and tail nodes to simplify adding/removing
+        map = new HashMap<>();
         head = new Node(0, 0);
         tail = new Node(0, 0);
+
         head.next = tail;
         tail.prev = head;
     }
 
     public int get(int key) {
-        if (!cache.containsKey(key))
+        if (!map.containsKey(key))
             return -1;
-
-        Node node = cache.get(key);
-        moveToFront(node); // Recently used
-        return node.value;
-    }
-
-    public void put(int key, int value) {
-        if (cache.containsKey(key)) {
-            // Update value and move to front
-            Node node = cache.get(key);
-            node.value = value;
+        else {
+            Node node = map.get(key);
             moveToFront(node);
-        } else {
-            if (cache.size() == capacity) {
-                // Remove least recently used from list and map
-                Node lru = tail.prev;
-                remove(lru);
-                cache.remove(lru.key);
-            }
-
-            // Add new node to front
-            Node newNode = new Node(key, value);
-            cache.put(key, newNode);
-            insertToFront(newNode);
+            return node.val;
         }
     }
 
-    // Helper: remove a node from the list
+    public void put(int key, int value) {
+        if (map.containsKey(key)) {
+            Node node = map.get(key);
+            node.val = value;
+            moveToFront(node);
+        } else {
+            if (map.size() == capacity) {
+                Node node = tail.prev;
+                remove(node);
+                map.remove(node.key);
+            }
+
+            Node newNode = new Node(key, value);
+            map.put(key, newNode);
+            insertAtFront(newNode);
+        }
+    }
+
     private void remove(Node node) {
         node.prev.next = node.next;
         node.next.prev = node.prev;
     }
 
-    // Helper: insert a node right after head (most recently used)
-    private void insertToFront(Node node) {
-        node.next = head.next;
-        node.prev = head;
-
-        head.next.prev = node;
-        head.next = node;
+    private void insertAtFront(Node node) {
+        node.next = head.next; // node.next → old
+        node.prev = head; // node.prev → head
+        head.next.prev = node; // old.prev → node
+        head.next = node; // head.next → node
     }
 
-    // Helper: move a node to the front
     private void moveToFront(Node node) {
         remove(node);
-        insertToFront(node);
+        insertAtFront(node);
     }
 }
 
