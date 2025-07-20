@@ -1,20 +1,25 @@
 class Solution {
     public int[] sortArray(int[] nums) {
-        mergeSort(nums, 0, nums.length - 1);
-        return nums;
+        int n = nums.length;
+        mergeSort(nums, 0, n - 1);
+        return nums; 
     }
 
     private void mergeSort(int[] nums, int l, int r) {
         if (l < r) {
             int mid = l + (r - l) / 2;
-            mergeSort(nums, l, mid); //divide - O(logn)
+            
+            //divide O(logn)
+            mergeSort(nums, l, mid);
             mergeSort(nums, mid + 1, r);
-            merge(nums, l, mid, r); //conquer - O(N)
+
+            //conquer O(n)
+            merge(nums, l, mid, r);
         }
     }
 
     private void merge(int[] nums, int l, int mid, int r) {
-        // Use a temp array only for this portion
+
         int[] temp = new int[r - l + 1];
         int i = l, j = mid + 1, k = 0;
 
@@ -26,15 +31,9 @@ class Solution {
             }
         }
 
-        while (i <= mid) {
-            temp[k++] = nums[i++];
-        }
+        while(i <= mid) temp[k++] = nums[i++];
+        while(j <= r) temp[k++] = nums[j++];
 
-        while (j <= r) {
-            temp[k++] = nums[j++];
-        }
-
-        // Copy temp back to nums[l..r]
         for (int m = 0; m < temp.length; m++) {
             nums[l + m] = temp[m];
         }
