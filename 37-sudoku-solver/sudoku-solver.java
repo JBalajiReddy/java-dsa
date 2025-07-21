@@ -24,12 +24,12 @@ class Solution {
             if (isSafe(b, r, c, d)) {
                 b[r][c] = d;
                 if (solve(b, nxRow, nxCol))
-                    return true;
+                    return true; // Valid path → continue
 
-                b[r][c] = '.';
+                b[r][c] = '.'; //backtrack
             }
         }
-        return false;
+        return false; //If none of the digits '1' to '9' are safe → backtrack to previous cell
     }
 
     private boolean isSafe(char[][] b, int r, int c, char d) {
@@ -37,12 +37,14 @@ class Solution {
 
         //row or horizantal
         for (int col = 0; col < 9; col++) {
-            if (b[r][col] == d) return false;
+            if (b[r][col] == d)
+                return false;
         }
 
         //col or vertical
         for (int row = 0; row < 9; row++) {
-            if (b[row][c] == d) return false;
+            if (b[row][c] == d)
+                return false;
         }
 
         //3X3
@@ -50,7 +52,8 @@ class Solution {
         int cellCol = 3 * (c / 3);
         for (int i = cellRow; i < cellRow + 3; i++) {
             for (int j = cellCol; j < cellCol + 3; j++) {
-                if (b[i][j] == d) return false;
+                if (b[i][j] == d)
+                    return false;
             }
         }
 
