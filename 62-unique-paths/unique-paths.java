@@ -1,3 +1,5 @@
+// Bottom-up -> up, left, Top Down -> down, right
+
 class Solution {
     public int uniquePaths(int m, int n) {
         int[] prev = new int[n];
@@ -7,11 +9,11 @@ class Solution {
             for (int j = 0; j < n; j++) {
                 if (i == 0 && j == 0) curr[j] = 1;
                 else {
-                    int down = 0;
-                    int right = 0;
-                    if (i > 0) down = prev[j];
-                    if (j > 0) right = curr[j - 1];
-                    curr[j] = down + right;
+                    int up = 0;
+                    int left = 0;
+                    if (i > 0) up = prev[j];
+                    if (j > 0) left = curr[j - 1];
+                    curr[j] = up + left;
                 }
             }
             prev = curr;
