@@ -1,33 +1,49 @@
-//BOTTOM-UP
+//space optimized
 class Solution {
     public int change(int amount, int[] coins) {
-        int n = coins.length;
-        int[] prev = new int[amount + 1];
-        int[] curr = new int[amount + 1];
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;
 
-        for (int a = 0; a <= amount; a++) { //i == 0
-            if (a % coins[0] == 0)
-                prev[a] = 1;
-        }
-
-        for (int i = 0; i < n; i++)      //amount == 0
-            curr[0] = 1;
-
-        for (int i = 1; i < n; i++) {
-            for (int a = 1; a <= amount; a++) {
-                int pick = 0;
-                int noPick = prev[a];
-                if (coins[i] <= a)
-                    pick = curr[a - coins[i]];
-
-                curr[a] = pick + noPick;
+        for (int coin : coins) {
+            for (int a = coin; a <= amount; a++) {
+                dp[a] += dp[a - coin];
             }
-            prev = curr;
         }
 
-        return prev[amount];
+        return dp[amount];
     }
 }
+
+//BOTTOM-UP
+// class Solution {
+//     public int change(int amount, int[] coins) {
+//         int n = coins.length;
+//         int[] prev = new int[amount + 1];
+//         int[] curr = new int[amount + 1];
+
+//         for (int a = 0; a <= amount; a++) { //i == 0
+//             if (a % coins[0] == 0)
+//                 prev[a] = 1;
+//         }
+
+//         for (int i = 0; i < n; i++)      //amount == 0
+//             curr[0] = 1;
+
+//         for (int i = 1; i < n; i++) {
+//             for (int a = 1; a <= amount; a++) {
+//                 int pick = 0;
+//                 int noPick = prev[a];
+//                 if (coins[i] <= a)
+//                     pick = curr[a - coins[i]];
+
+//                 curr[a] = pick + noPick;
+//             }
+//             prev = curr;
+//         }
+
+//         return prev[amount];
+//     }
+// }
 
 //TOP-DOWN - [TLE]
 // class Solution {
