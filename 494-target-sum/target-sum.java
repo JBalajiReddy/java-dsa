@@ -1,47 +1,38 @@
 //Divide into 2 subsets such that S1 - S2 == Target and S1 >= S2
+
 class Solution {
-    public int findTargetSumWays(int[] arr, int target) {
-        int n = arr.length;
-        int totSum = 0;
-        for (int i = 0; i < n; i++) {
-            totSum += arr[i];
-        }
-        // Checking for edge cases
-        if (totSum - target < 0)
-            return 0;
-        if ((totSum - target) % 2 == 1)
-            return 0;
+    public int findTargetSumWays(int[] nums, int target) {
+        int n = nums.length;
+        int sum = 0;
+        for (int s : nums) sum += s;
 
-        // Calculate the second sum based on the total sum and the target
-        int s2 = (totSum - target) / 2;
-        int dp[][] = new int[n][s2 + 1];
+        if (sum < target) return 0;
+        if ((sum - target) % 2 == 1) return 0; //not an integer 
 
-        for (int row[] : dp)
-            Arrays.fill(row, -1);
-        return countPartitionsUtil(n - 1, s2, arr, dp);
+        //s1 - s2 = D, s1 + s2 = T, 2s2 = T - D
+        int s2 = (sum - target) / 2; //find subsets with sum s2
+
+        int[][] dp = new int[n][s2 + 1];
+        for (int[] r : dp) Arrays.fill(r, -1);
+
+        return solve(n - 1, s2, nums, dp);
     }
 
-    private int countPartitionsUtil(int ind, int target, int[] arr, int[][] dp) {
-        // Base case: If we have reached the first element
-        if (ind == 0) {
-            // Check if the target is 0 and the first element is also 0
-            if (target == 0 && arr[0] == 0)
-                return 2;
-            // Check if the target is equal to the first element or 0
-            if (target == 0 || target == arr[0])
-                return 1;
+    private int solve(int i, int t, int[] nums, int[][] dp) {
+        if (i == 0) {
+            if (t == 0 && nums[0] == 0) return 2;
+            if (t == 0 || nums[0] == t) return 1;
+
             return 0;
         }
 
-        if (dp[ind][target] != -1)
-            return dp[ind][target];
+        if (dp[i][t] != -1) return dp[i][t];
 
-        int notTaken = countPartitionsUtil(ind - 1, target, arr, dp);
-        int taken = 0;
+        int pick = 0;
+        int noPick = solve(i - 1, t, nums, dp);
 
-        if (arr[ind] <= target)
-            taken = countPartitionsUtil(ind - 1, target - arr[ind], arr, dp);
+        if (nums[i] <= t) pick = solve(i - 1, t - nums[i], nums, dp);
 
-        return dp[ind][target] = (notTaken + taken);
+        return dp[i][t] = pick + noPick;
     }
 }
