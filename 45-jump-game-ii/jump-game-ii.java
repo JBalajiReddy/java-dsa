@@ -1,3 +1,8 @@
+// You look at all the positions you can jump to from the current range [left, right]
+// You calculate the farthest index you can reach from any of them
+// Then you "jump" to the next range (left = right + 1, right = farthest)
+// Each level represents one jump
+
 class Solution {
     public int jump(int[] nums) {
         int n = nums.length;
@@ -5,7 +10,9 @@ class Solution {
         int jumps = 0;
 
         while (right < n - 1) {
-            int farthest = 0;
+            int farthest = 0; 
+            //Within the current jump window [left, right],
+            // find the farthest position you can jump to from any index i
             for (int i = left; i <= right; i++) {
                 farthest = Math.max(farthest, i + nums[i]);
             }
