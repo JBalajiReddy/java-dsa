@@ -1,28 +1,23 @@
 class Solution {
-    public int[][] insert(int[][] currIntervals, int[] newInterval) {
-        int n = currIntervals.length;
-        int i = 0;
-        List<int[]> res = new ArrayList<>();
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        List<int[]> ls = new ArrayList<>();
+        int i = 0, n = intervals.length;
 
-        //no-overlapping before merging
-        while (i < n && currIntervals[i][1] < newInterval[0]) {
-            res.add(currIntervals[i]);
+        //non-overlapping with newIntervals
+        while (i < n && intervals[i][1] < newInterval[0]) ls.add(intervals[i++]);
+
+        //merge overlapping intervals with newIntervals
+        while (i < n && intervals[i][0] <= newInterval[1]) {
+            newInterval[0] = Math.min(intervals[i][0], newInterval[0]);
+            newInterval[1] = Math.max(intervals[i][1], newInterval[1]);
             i++;
         }
 
-        //overlapping with merging intervals
-        while (i < n && newInterval[1] >= currIntervals[i][0]) {
-            newInterval[0] = Math.min(newInterval[0], currIntervals[i][0]);
-            newInterval[1] = Math.max(newInterval[1], currIntervals[i][1]);
-            i++;
-        }
-        res.add(newInterval);
+        ls.add(newInterval);
 
-        //no overlapping after merging
-        while (i < n) {
-            res.add(currIntervals[i]);
-            i++;
-        }
-        return res.toArray(new int[res.size()][]);
+        //remaining
+         while (i < n) ls.add(intervals[i++]);
+
+        return ls.toArray(new int[ls.size()][]);
     }
 }
