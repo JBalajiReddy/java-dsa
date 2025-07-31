@@ -6,7 +6,8 @@ class Solution {
         int[] curr = intervals[0];
         ls.add(curr);
 
-        for (int[] next : intervals) {
+        for (int i = 1; i < intervals.length; i++) {
+            int[] next = intervals[i];
             if (curr[1] < next[0]) {
                 curr = next;
                 ls.add(curr);
@@ -20,3 +21,11 @@ class Solution {
 
 // curr:  |--------|
 // next:     |--------|
+
+
+// curr: |-----------|
+// next:    |-----|
+
+
+// curr: |-----|
+// next:       |-----|
