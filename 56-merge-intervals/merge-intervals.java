@@ -17,3 +17,6 @@ class Solution {
         return ls.toArray(new int[ls.size()][]);
     }
 }
+
+// curr:  |--------|
+// next:     |--------|
