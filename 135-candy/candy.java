@@ -1,20 +1,35 @@
 class Solution {
     public int candy(int[] ratings) {
         int n = ratings.length;
-        int[] candies = new int[n];
-        Arrays.fill(candies, 1);
-        int cnt = 0;
-        for (int i = 1; i < n; i++) {
-            if (ratings[i - 1] < ratings[i]) {
-                candies[i] = candies[i - 1] + 1;
+        int sum = 1, i = 1;
+
+        while (i < n) {
+            //flat
+            if (ratings[i] == ratings[i - 1]) {
+                sum++;
+                i++;
+                continue;
             }
-        }
-        for (int i = n - 1; i > 0; i--) {
-            if (ratings[i] < ratings[i - 1]) {
-                candies[i - 1] = Math.max(candies[i] + 1, candies[i - 1]);
+
+            //peak - We are assigning candies immediately while walking the slope (since next child must get more).
+            int peak = 1;
+            while (i < n && ratings[i] > ratings[i - 1]) {
+                peak++;
+                sum += peak;
+                i++;
             }
-            cnt += candies[i - 1];
+
+            //down - We are just counting how long it is, and compute candies in bulk after the downhill ends.
+            int down = 0;
+            while (i < n && ratings[i] < ratings[i - 1]) {
+                down++;
+                sum += down;
+                i++;
+            }
+            down++;
+            if (down > peak)
+                sum += (down - peak);
         }
-        return cnt + candies[n - 1];
+        return sum;
     }
 }
