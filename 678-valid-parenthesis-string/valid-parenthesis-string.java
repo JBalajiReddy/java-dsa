@@ -12,8 +12,8 @@ class Solution {
                 min--;
                 max--;
             } else {
-                min--;
-                max++;
+                min--; // '*' as ) or empty
+                max++; // '*' as (
             }
 
             if (min < 0)
