@@ -6,7 +6,7 @@ class Solution {
         while (i < n) {
             //flat
             if (ratings[i] == ratings[i - 1]) {
-                sum++;
+                sum++; //sum += 1
                 i++;
                 continue;
             }
@@ -26,9 +26,12 @@ class Solution {
                 sum += down;
                 i++;
             }
+
             down++;
+
             if (down > peak)
                 sum += (down - peak);
+
         }
         return sum;
     }
