@@ -1,16 +1,18 @@
 class Solution {
     public int numberOfSubstrings(String s) {
-        int i = 0, j , res = 0;
-        int[] freq = {0, 0, 0};
+        int n = s.length();
 
-        for(j = 0; j < s.length(); j++) {
-            freq[s.charAt(j) - 'a']++;
-            while(freq[0] > 0 && freq[1] > 0 && freq[2] > 0) {
-                res += s.length() - j;
-                freq[s.charAt(i) - 'a']--;
-                i++;
+        int[] lastSeen = { -1, -1, -1 };
+        int count = 0;
+
+        for (int i = 0; i < n; i++) {
+            lastSeen[s.charAt(i) - 'a'] = i; //idx
+
+            if (lastSeen[0] != -1 && lastSeen[1] != -1 && lastSeen[2] != -1) {
+                // The earliest last seen index determines how many valid substrings end at index i
+                count = count + (1 + Math.min(lastSeen[0], Math.min(lastSeen[1], lastSeen[2])));
             }
         }
-        return res;
+        return count;
     }
 }
