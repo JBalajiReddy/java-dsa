@@ -10,7 +10,7 @@ class Solution {
 
             if (lastSeen[0] != -1 && lastSeen[1] != -1 && lastSeen[2] != -1) {
                 // The earliest last seen index determines how many valid substrings end at index i
-                count = count + (1 + Math.min(lastSeen[0], Math.min(lastSeen[1], lastSeen[2])));
+                count = count + (1 + Math.min(lastSeen[0], Math.min(lastSeen[1], lastSeen[2]))); //count = count + 1 + idx
             }
         }
         return count;
