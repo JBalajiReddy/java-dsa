@@ -9,13 +9,13 @@ class Solution {
             mp.put(fruits[right], mp.getOrDefault(fruits[right], 0) + 1);
 
             if (mp.size() > 2) {
-                while (mp.size() > 2) {
+                // while (mp.size() > 2) {
                     mp.put(fruits[left], mp.getOrDefault(fruits[left], 0) - 1);
                     if (mp.get(fruits[left]) == 0)
                         mp.remove(fruits[left]);
 
                     left++;
-                }
+                // }
             }
 
             if (mp.size() <= 2) {
