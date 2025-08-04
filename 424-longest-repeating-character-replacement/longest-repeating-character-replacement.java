@@ -11,14 +11,12 @@ class Solution {
             freq[ch - 'A']++;
             maxFreq = Math.max(maxFreq, freq[ch - 'A']);
 
-            if ((right - left + 1) - maxFreq > k) {
+            if ((right - left + 1) - maxFreq > k) { // while ((right - left + 1) - maxFreq > k) 
 
-                //chars need to changed -> len - maxFreq
-                // while ((right - left + 1) - maxFreq > k) { 
+                //min-chars need to changed -> len - maxFreq
                 freq[s.charAt(left) - 'A']--;
                 maxFreq = Math.max(maxFreq, freq[s.charAt(left) - 'A']);
                 left++;
-                // }
 
             }
 
