@@ -1,3 +1,6 @@
+//The number of times sum - k has occurred so far
+//tells us how many subarrays ending at the current index have a total sum equal to k.
+
 class Solution {
     public int subarraySum(int[] nums, int k) {
         int n = nums.length;
