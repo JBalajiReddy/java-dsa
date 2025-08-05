@@ -1,55 +1,46 @@
 class Solution {
     public String minWindow(String s, String t) {
-        int n1 = s.length();
-        int n2 = t.length();
-        if (n2 > n1)
+        if (t.length() > s.length())
             return "";
         if (s.equals(t))
             return s;
 
-        int l = 0;
-        int r = 0; 
-        Map<Character, Integer> map = new HashMap<>(); 
-        int cnt = 0; 
-        int sIdx = -1; 
+        Map<Character, Integer> mp = new HashMap<>();
+
+        for (char ch : t.toCharArray())
+            mp.put(ch, mp.getOrDefault(ch, 0) + 1); //t string
+
+        int left = 0, right = 0;
+        int cnt = 0;
+        int sIdx = -1;
         int minLen = Integer.MAX_VALUE;
-        String res = ""; 
+        String res = "";
 
-        for (int i = 0; i < n2; i++) {
-            map.put(t.charAt(i), map.getOrDefault(t.charAt(i), 0) + 1);
-        }
+        while (right < s.length()) {
+            char chR = s.charAt(right);
 
-        while (r < n1) {
-            char ch = s.charAt(r);
-
-            // If it's a required character and still needed, count it
-            if (map.containsKey(ch) && map.get(ch) > 0)
+            if (mp.containsKey(chR) && mp.get(chR) > 0) { //ch is in string t and s
                 cnt++;
-
-            map.put(ch, map.getOrDefault(ch, 0) - 1);
-
-            // If all required characters are matched
-            while (cnt == n2) {
-                if (r - l + 1 < minLen) {
-                    minLen = r - l + 1;
-                    sIdx = l;
-                }
-
-                // Try to shrink the window from the left
-                char leftChar = s.charAt(l);
-                map.put(leftChar, map.getOrDefault(leftChar, 0) + 1);
-
-                // If after incrementing, the character is required again, decrement count
-                //If a required character is lost (map.get(s[l]) > 0), decrement cnt.
-                if (map.get(leftChar) > 0)
-                    cnt--;
-
-                l++; 
             }
 
-            r++; 
-        }
+            mp.put(chR, mp.getOrDefault(chR, 0) - 1); //Mark the character as seen (decrement freq even if it's extra)
 
+            while (cnt == t.length()) {
+                char chL = s.charAt(left);
+
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    sIdx = left;
+                }
+
+                mp.put(chL, mp.getOrDefault(chL, 0) + 1); //un-see the char from s
+                if (mp.get(chL) > 0)
+                    cnt--;
+
+                left++;
+            }
+            right++;
+        }
         return sIdx == -1 ? "" : s.substring(sIdx, sIdx + minLen);
     }
 }
