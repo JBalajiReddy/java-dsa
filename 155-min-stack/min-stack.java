@@ -1,37 +1,49 @@
 class MinStack {
-
-    Stack<Integer> stack;
-    Stack<Integer> minStack;
+    Stack<Long> st;
+    Long min;
 
     public MinStack() {
-        stack = new Stack<>();
-        minStack = new Stack<>();
+        st = new Stack<>();
+        min = Long.MAX_VALUE;
     }
 
-    public void push(int val) {
-        stack.push(val);
-
-        // If minStack is empty or new value is less than equal to
-        // the top of the minStack, push it onto the minStack
-        if (minStack.isEmpty() || val <= minStack.peek())
-            minStack.push(val);
+    public void push(int value) {
+        Long val = Long.valueOf(value);
+        if (st.isEmpty()) {
+            st.push(val);
+            min = val;
+        } else {
+            if (val > min) {
+                st.push(val);
+            } else {
+                Long newVal = 2 * val - min; //newVal < min
+                st.push(newVal);
+                min = val;
+            }
+        }
     }
 
     public void pop() {
-        int poppedValue = stack.pop();
-
-        // If popped value == top of the minStack,
-        // pop it from the minStack as well
-        if (poppedValue == minStack.peek())
-            minStack.pop();
+        if (st.isEmpty())
+            return;
+        Long x = st.pop();
+        if (x < min) { //modified, actual top was min, restore prevMin
+            min = 2 * min - x; //prevMin = 2 * currMin - x
+        }
+        // If x >= min, it was a normal value, so no need to update min
     }
 
     public int top() {
-        return stack.peek();
+        if (st.isEmpty())
+            return -1;
+        Long x = st.peek();
+        if (x < min) //modified, so top is min
+            return min.intValue();
+        return x.intValue();
     }
 
     public int getMin() {
-        return minStack.peek();
+        return min.intValue();
     }
 }
 
