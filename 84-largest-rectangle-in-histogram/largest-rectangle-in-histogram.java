@@ -1,3 +1,8 @@
+// A monotonic increasing stack (stores indices) helps us:
+// Keep track of bars in increasing height order.
+// When we encounter a smaller height, it means the previous taller bar’s boundary ends here.
+// At that point, we can compute the area for that taller bar.
+
 class Solution {
     public int largestRectangleArea(int[] heights) {
         Stack<Integer> stack = new Stack<>();
@@ -5,22 +10,17 @@ class Solution {
         int n = heights.length;
 
         for (int i = 0; i <= n; i++) {
-            int currHeight = (i == n) ? 0 : heights[i];
-
-            while (!stack.isEmpty() && currHeight < heights[stack.peek()]) {
+            int h = (i == n) ? 0 : heights[i];
+            while (!stack.isEmpty() && h < heights[stack.peek()]) {
                 int height = heights[stack.pop()];
                 int width = stack.isEmpty() ? i : i - stack.peek() - 1;
                 maxArea = Math.max(maxArea, height * width);
             }
-
             stack.push(i);
         }
-
         return maxArea;
     }
 }
-
-
 
 // class Solution {
 //     public int largestRectangleArea(int[] heights) {
