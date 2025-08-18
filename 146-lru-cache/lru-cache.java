@@ -58,10 +58,10 @@ class LRUCache {
     }
 
     private void insertAtFront(Node node) {
-        node.next = head.next; // node.next → old
-        node.prev = head; // node.prev → head
-        head.next.prev = node; // old.prev → node
-        head.next = node; // head.next → node
+       node.next = head.next;
+       node.prev = head.next.prev;
+       head.next.prev = node;
+       head.next = node;
     }
 
     private void moveToFront(Node node) {
