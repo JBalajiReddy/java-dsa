@@ -21,7 +21,7 @@ class Solution {
             dq.addLast(i);
 
             if (i >= k - 1)
-                res[ri++] = nums[dq.getFirst()];
+                res[ri++] = nums[dq.getFirst()]; //max in each window
         }
 
         return res;
