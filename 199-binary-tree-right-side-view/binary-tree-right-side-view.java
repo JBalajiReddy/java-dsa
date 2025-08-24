@@ -13,6 +13,7 @@
  *     }
  * }
  */
+
 class Solution {
     public List<Integer> rightSideView(TreeNode root) {
         List<Integer> res = new ArrayList<>();
@@ -24,19 +25,17 @@ class Solution {
         q.offer(root);
 
         while (!q.isEmpty()) {
-            int size = q.size();
-
-            while (size > 0) {
+            int n = q.size();
+            for (int i = 0; i < n; i++) {
                 TreeNode node = q.poll();
+                if (i == n - 1)
+                    res.add(node.val);
 
                 if (node.left != null)
                     q.offer(node.left);
                 if (node.right != null)
                     q.offer(node.right);
-                    
-                size--;
-                if (size == 0)
-                    res.add(node.val);
+
             }
         }
         return res;
