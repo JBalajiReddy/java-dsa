@@ -14,55 +14,16 @@
  * }
  */
 
-
 class Solution {
-    private Integer prev = null; 
-
     public boolean isValidBST(TreeNode root) {
-        return inOrder(root);
+        return isValid(Long.MIN_VALUE, root, Long.MAX_VALUE);
     }
 
-    private boolean inOrder(TreeNode root) {
-        if (root == null) {
-            return true; 
-        }
-
-        if (!inOrder(root.left)) {
-            return false; 
-        }
-
-        if (prev != null && root.val <= prev) {
-            return false; 
-        }
-        prev = root.val; 
-
-        return inOrder(root.right);
+    private boolean isValid(long min, TreeNode root, long max) {
+        if (root == null)
+            return true;
+        if (root.val >= max || root.val <= min)
+            return false;
+        return isValid(min, root.left, root.val) && isValid(root.val, root.right, max);
     }
 }
-
-
-// class Solution {
-//     ArrayList<Integer> ls;
-
-//     public boolean isValidBST(TreeNode root) {
-//         ls = new ArrayList<>();
-//         inOrder(root);
-//         return isSorted(ls);
-//     }
-
-//     private void inOrder(TreeNode root) {
-//         if (root == null)
-//             return;
-//         inOrder(root.left);
-//         ls.add(root.val);
-//         inOrder(root.right);
-//     }
-
-//     private boolean isSorted(ArrayList<Integer> ls) {
-//         for (int i = 0; i < ls.size() - 1; i++) {
-//             if (ls.get(i) >= ls.get(i + 1))
-//                 return false;
-//         }
-//         return true;
-//     }
-// }
