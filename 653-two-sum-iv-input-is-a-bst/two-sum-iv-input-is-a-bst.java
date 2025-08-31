@@ -13,8 +13,10 @@
  *     }
  * }
  */
+
 class Solution {
     public boolean findTarget(TreeNode root, int k) {
+        if (root == null) return false;
         Set<Integer> seen = new HashSet<>();
         return find(root, seen, k);
     }
