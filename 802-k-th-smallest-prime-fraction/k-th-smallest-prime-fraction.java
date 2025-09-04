@@ -15,15 +15,18 @@ class Solution {
         int n = arr.length;
         if (n == 2 && k == 1)
             return new int[] { arr[0], arr[1] };
-        List<Pair> ls = new ArrayList<>();
+        PriorityQueue<Pair> pq = new PriorityQueue<>(Comparator.comparingDouble(p -> p.f));
         for (int i = 0; i < n; i++) {
             for (int j = i + 1; j < n; j++) {
-                ls.add(new Pair(arr[i], arr[j]));
+                pq.offer(new Pair(arr[i], arr[j]));
             }
         }
 
-        ls.sort(Comparator.comparingDouble(p -> p.f));
-        Pair resultPair = ls.get(k - 1);
+        for (int i = 0; i < k - 1; i++) {
+            pq.poll();
+        }
+        
+        Pair resultPair = pq.peek();
         int num1 = resultPair.n1;
         int num2 = resultPair.n2;
         return new int[] { num1, num2 };
