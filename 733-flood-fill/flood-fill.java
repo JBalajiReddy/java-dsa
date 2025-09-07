@@ -1,7 +1,7 @@
 class Solution {
     public int[][] floodFill(int[][] image, int sr, int sc, int color) {
         int nColor = image[sr][sc];
-        if(nColor != color) {
+        if (nColor != color) {
             dfs(image, sr, sc, color, nColor);
         }
         return image;
@@ -13,9 +13,9 @@ class Solution {
 
         image[r][c] = req_color;
 
-        dfs(image, r + 1, c, req_color, nColor);
-        dfs(image, r - 1, c, req_color, nColor);
-        dfs(image, r, c + 1, req_color, nColor);
-        dfs(image, r, c - 1, req_color, nColor);
+        int[] dRow = { -1, 0, +1, 0 };
+        int[] dCol = { 0, +1, 0, -1 };
+        for (int i = 0; i < 4; i++)
+            dfs(image, r + dRow[i], c + dCol[i], req_color, nColor);
     }
 }
