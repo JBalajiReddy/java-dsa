@@ -1,5 +1,3 @@
-import java.util.*;
-
 class Solution {
 
     private boolean dfs(ArrayList<ArrayList<Integer>> adj, int node, int[] color, int currColor) {
