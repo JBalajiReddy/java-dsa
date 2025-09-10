@@ -1,53 +1,40 @@
 class Solution {
-    public int[] findOrder(int numCourses, int[][] prerequisites) {
-        int[] inDegree = new int[numCourses];
-        //Courses, neighbors
-        Map<Integer, Set<Integer>> map = new HashMap<>();
+    public int[] findOrder(int V, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++)
+            adj.add(new ArrayList<>());
 
-        for (int i = 0; i < numCourses; i++) {
-            map.put(i, new HashSet<>());
+        //Apply - topological sort
+        //BFS - kahn's algo
+        int[] inDegree = new int[V];
+        for (int p[] : prerequisites) {
+            int u = p[0];
+            int v = p[1];
+            adj.get(v).add(u);
+            inDegree[u]++;
         }
 
-        //forming edges
-        for (int[] p : prerequisites) {
-            int dCourse = p[0];
-            int course = p[1];
-            map.get(course).add(dCourse); //course -> dCourse
-            inDegree[dCourse]++;
-        }
-
-        Queue<Integer> q = new LinkedList<>();
-        for (int i = 0; i < numCourses; i++) {
-            if (inDegree[i] == 0)
-                q.offer(i); //add node if in-degree is 0
-        }
-
-        List<Integer> ls = new ArrayList<>();
-        while (!q.isEmpty()) {
-            int size = q.size();
-
-            while (size-- > 0) {
-                int head = q.poll();
-                if (inDegree[head] == 0)
-                    ls.add(head);
-
-                for (int neigh : map.get(head)) {
-                    inDegree[neigh]--;
-                    if (inDegree[neigh] == 0)
-                        q.offer(neigh); //add neigh to queue if in-degree is 0
-                }
+        Queue<Integer> q = new ArrayDeque<>();
+        for (int i = 0; i < V; i++) {
+            if (inDegree[i] == 0) {
+                q.offer(i);
             }
         }
 
-        int i = 0;
-        int[] res = new int[ls.size()];
-        for (int ele : ls) {
-            res[i] = ele;
-            i++;
-        }
+        
+        int cnt = 0;
+        int[] res = new int[V];
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            res[cnt] = node;
+            cnt++;
 
-        if (ls.size() != numCourses)
-            return new int[] {};
-        return res;
+            for (int neigh : adj.get(node)) {
+                inDegree[neigh]--;
+                if (inDegree[neigh] == 0)
+                    q.offer(neigh);
+            }
+        }
+        return cnt == V ? res : new int[0];
     }
 }
