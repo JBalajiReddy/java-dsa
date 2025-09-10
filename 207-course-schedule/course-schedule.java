@@ -1,41 +1,43 @@
 class Solution {
-    public boolean canFinish(int n, int[][] prerequisites) {
-        //n->numCourses
-        List<List<Integer>> graph = new ArrayList<>();
-        for (int i = 0; i < n; i++)
-            graph.add(new ArrayList<>());
-        for (int[] edge : prerequisites) {
-            int a = edge[0];
-            int b = edge[1];
-            graph.get(b).add(a); //edge from b->a (a depends on b)        
+    public boolean canFinish(int V, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++)
+            adj.add(new ArrayList<>());
+
+        for (int p[] : prerequisites) {
+            int u = p[0];
+            int v = p[1];
+            adj.get(u).add(v);
         }
 
-        int[] color = new int[n]; // 0 -> Unvisited, 1 -> Visiting, 2 -> Visited
-
-        for (int i = 0; i < n; i++) {
-            if (color[i] == 0) {
-                if (checkCycle(i, graph, color))
-                    return false; //cycle detected
+        //Apply - topological sort
+        //BFS - kahn's algo
+        int[] inDegree = new int[V];
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < adj.get(i).size(); j++) {
+                int n = adj.get(i).get(j);
+                inDegree[n]++;
             }
         }
-        return true;
-    }
 
-    private boolean checkCycle(int node, List<List<Integer>> graph, int[] color) {
-        color[node] = 1; //visiting
-
-        for (int nbr : graph.get(node)) {
-            if (color[nbr] == 1)
-                return true; //cycle
-
-            if (color[nbr] == 2)
-                continue; //already visited - ignore
-
-            if (checkCycle(nbr, graph, color))
-                return true; //cycle among neighbor
+        int cnt = 0;
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < V; i++) {
+            if (inDegree[i] == 0) {
+                q.offer(i);
+            }
         }
 
-        color[node] = 2; //mark visited
-        return false;
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            cnt++;
+
+            for (int neigh : adj.get(node)) {
+                inDegree[neigh]--;
+                if (inDegree[neigh] == 0)
+                    q.offer(neigh);
+            }
+        }
+        return cnt == V;
     }
 }
