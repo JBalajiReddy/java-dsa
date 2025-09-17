@@ -1,12 +1,28 @@
 class Solution {
     public int singleNonDuplicate(int[] nums) {
-        int st = 0, end = nums.length - 1;
-        while (st < end) {
-            int mid = st + (end - st) / 2;
-            if (mid % 2 == 1) mid--;
-            if (nums[mid] == nums[mid + 1]) st = mid + 2;
-            else end = mid;
+        //(even, odd) -> element is on right half, eliminate left half
+        //(odd, even) -> element is on left half, eliminate right half
+        //0 1 2 3 4 5 6 7 8
+        //1 1 2 3 3 4 4 5 5 
+        //    x
+        int n = nums.length;
+        if (n == 1)
+            return nums[0];
+        if (nums[0] != nums[1])
+            return nums[0];
+        if (nums[n - 1] != nums[n - 2])
+            return nums[n - 1];
+
+        int low = 1, high = n - 2;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (nums[mid] != nums[mid + 1] && nums[mid] != nums[mid - 1])
+                return nums[mid];
+            if ((mid % 2 == 1 && nums[mid - 1] == nums[mid]) || (mid % 2 == 0 && nums[mid] == nums[mid + 1]))
+                low = mid + 1;
+            else
+                high = mid - 1;
         }
-        return nums[st];
+        return -1;
     }
 }
