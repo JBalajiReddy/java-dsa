@@ -1,32 +1,32 @@
 class Solution {
     public int splitArray(int[] nums, int k) {
-        int st = Arrays.stream(nums).max().orElse(0);
-        int end = Arrays.stream(nums).sum();
-        while (st <= end) {
-            int mid = st + (end - st) / 2;
-            int count = countSubarraysWithMaxSumLimit(nums, mid);
-            //Check: Can we split the array into ≤ k subarrays such that no subarray sum exceeds mid?
-            //If yes → try smaller max
-            //If no → we need a bigger max sum
-            if (count <= k)
-                end = mid - 1;
-            else
-                st = mid + 1;
+        int low = 0, high = 0;
+        for (int n : nums) {
+            low = Math.max(low, n);
+            high += n;
         }
-        return st;
-    }
 
-    private int countSubarraysWithMaxSumLimit(int[] nums, int maxAllowedSum) {
-        int c = 1;
-        long sum = 0;
-        for (int i = 0; i < nums.length; i++) {
-            if (sum + nums[i] <= maxAllowedSum)
-                sum += nums[i];
-            else {
-                c += 1;
-                sum = nums[i];
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (isPossible(mid, nums, k) > k) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
             }
         }
-        return c;
+        return low;
+    }
+
+    private int isPossible(int limit, int[] arr, int k) {
+        int sum = 0, cnt = 1;
+        for (int i = 0; i < arr.length; i++) {
+            if (sum + arr[i] <= limit) {
+                sum += arr[i];
+            } else {
+                cnt++;
+                sum = arr[i];
+            }
+        }
+        return cnt;
     }
 }
