@@ -9,9 +9,9 @@ class Solution {
         while (low <= high) {
             int mid = low + (high - low) / 2;
             if (isPossible(mid, nums, k) > k) {
-                low = mid + 1;
+                low = mid + 1; //not possible, increase limit
             } else {
-                high = mid - 1;
+                high = mid - 1; //possible limit, try to minimize
             }
         }
         return low;
