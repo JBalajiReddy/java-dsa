@@ -30,3 +30,4 @@ class Solution {
         return new int[] { -1, -1 };
     }
 }
+//so we guess a col, find max element in the col and check if it is greater than left and right
