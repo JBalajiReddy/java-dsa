@@ -2,40 +2,37 @@ class Solution {
     public int[] sortArray(int[] nums) {
         int n = nums.length;
         mergeSort(nums, 0, n - 1);
-        return nums; 
+        return nums;
     }
 
-    private void mergeSort(int[] nums, int l, int r) {
-        if (l < r) {
-            int mid = l + (r - l) / 2;
-            
-            //divide O(logn)
-            mergeSort(nums, l, mid);
-            mergeSort(nums, mid + 1, r);
-
-            //conquer O(n)
-            merge(nums, l, mid, r);
-        }
+    private void mergeSort(int[] nums, int low, int high) {
+        if (low >= high)
+            return;
+        int mid = (low + high) >> 1;
+        mergeSort(nums, low, mid);
+        mergeSort(nums, mid + 1, high);
+        merge(nums, low, mid, high);
     }
 
-    private void merge(int[] nums, int l, int mid, int r) {
-
-        int[] temp = new int[r - l + 1];
-        int i = l, j = mid + 1, k = 0;
-
-        while (i <= mid && j <= r) {
-            if (nums[i] <= nums[j]) {
-                temp[k++] = nums[i++];
+    private void merge(int[] nums, int low, int mid, int high) {
+        int l = low, r = mid + 1;
+        int[] tmp = new int[high - low + 1];
+        int k = 0;
+        while (l <= mid && r <= high) {
+            if (nums[l] <= nums[r]) {
+                tmp[k++] = nums[l++];
             } else {
-                temp[k++] = nums[j++];
+                tmp[k++] = nums[r++];
             }
         }
 
-        while(i <= mid) temp[k++] = nums[i++];
-        while(j <= r) temp[k++] = nums[j++];
+        while (l <= mid)
+            tmp[k++] = nums[l++];
+        while (r <= high)
+            tmp[k++] = nums[r++];
 
-        for (int m = 0; m < temp.length; m++) {
-            nums[l + m] = temp[m];
+        for (int i = low; i <= high; i++) {
+            nums[i] = tmp[i - low];
         }
     }
 }
