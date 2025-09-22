@@ -15,3 +15,6 @@ class Solution {
         return n + m - 2 * dp[n][m];
     }
 }
+
+// Deletions from word1 = length(word1) - length(LCS)
+// Deletions from word2 = length(word2) - length(LCS)
