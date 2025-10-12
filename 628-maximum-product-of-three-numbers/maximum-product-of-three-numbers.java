@@ -7,3 +7,7 @@ class Solution {
         return Math.max(pro1, pro2);
     }
 }
+
+//product of 3 large nnumbers 
+//or
+//product of 2 smallest and 1 largest
