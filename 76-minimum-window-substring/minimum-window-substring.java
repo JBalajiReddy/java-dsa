@@ -4,39 +4,24 @@ class Solution {
             return "";
         if (s.equals(t))
             return s;
-
         Map<Character, Integer> mp = new HashMap<>();
+        for (char c : t.toCharArray())
+            mp.put(c, mp.getOrDefault(c, 0) + 1);
 
-        for (char ch : t.toCharArray())
-            mp.put(ch, mp.getOrDefault(ch, 0) + 1); //t string
-
-        int left = 0, right = 0;
-        int cnt = 0;
-        int sIdx = -1;
-        int minLen = Integer.MAX_VALUE;
-        String res = "";
-
+        int left = 0, right = 0, cnt = 0, sIdx = -1, minLen = Integer.MAX_VALUE;
         while (right < s.length()) {
-            char chR = s.charAt(right);
-
-            if (mp.containsKey(chR) && mp.get(chR) > 0) { //ch is in string t and s
+            if (mp.containsKey(s.charAt(right)) && mp.get(s.charAt(right)) > 0)
                 cnt++;
-            }
-
-            mp.put(chR, mp.getOrDefault(chR, 0) - 1); //Mark the character as seen (decrement freq even if it's extra)
+            mp.put(s.charAt(right), mp.getOrDefault(s.charAt(right), 0) - 1);
 
             while (cnt == t.length()) {
-                char chL = s.charAt(left);
-
                 if (right - left + 1 < minLen) {
                     minLen = right - left + 1;
                     sIdx = left;
                 }
-
-                mp.put(chL, mp.getOrDefault(chL, 0) + 1); //un-see the char from s
-                if (mp.get(chL) > 0)
+                mp.put(s.charAt(left), mp.getOrDefault(s.charAt(left), 0) + 1);
+                if (mp.get(s.charAt(left)) > 0)
                     cnt--;
-
                 left++;
             }
             right++;
