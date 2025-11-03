@@ -1,11 +1,10 @@
 class Solution {
     public int reverse(int x) {
-        int rev = 0; // This will store the reversed number
+        int rev = 0; 
         
         while (x != 0) {
-            // Get the last digit
             int pop = x % 10;
-            x /= 10; // Move to the next digit
+            x /= 10; 
 
             // --- Check for overflow BEFORE we multiply ---
 
