@@ -20,15 +20,12 @@ class Solution {
         dfs(root, root.val);
         return cnt;
     }
-    
-    public void dfs(TreeNode root, int pathMax) {
-        if (root == null)
-            return;
-        pathMax = Math.max(pathMax, root.val);
-        if (root.val >= pathMax)
-            cnt++;
-        dfs(root.left, pathMax);
-        dfs(root.right, pathMax);
+    private void dfs(TreeNode node, int maxInPath) {
+        if (node == null) return;
+        if (node.val >= maxInPath) cnt++;
+        maxInPath = Math.max(maxInPath, node.val);
+        dfs(node.left, maxInPath);
+        dfs(node.right, maxInPath);
     }
 }
 
