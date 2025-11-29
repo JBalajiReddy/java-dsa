@@ -3,6 +3,6 @@ class Solution {
         int sum = 0;
         for (int n : nums) sum += n;
 
-        return (sum % k == 0) ? 0 : sum % k;
+        return sum % k;
     }
 }
