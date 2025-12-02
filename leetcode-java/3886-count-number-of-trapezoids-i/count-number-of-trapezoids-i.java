@@ -8,7 +8,7 @@ class Solution {
         }
         for (Map.Entry<Integer, Long> entry : map.entrySet()) {
             long val = entry.getValue();
-            long newVal = ((val * (val - 1)) / 2) % MOD;
+            long newVal = ((val * (val - 1)) / 2) % MOD; //nC2
             entry.setValue(newVal);
         }
         long ans = 0;
