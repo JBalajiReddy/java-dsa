@@ -49,9 +49,9 @@ class Solution {
 
     public List<String> findWords(char[][] board, String[] words) {
         Node node = root;
+
         for (String word : words)
             addWord(word);
-
         List<String> res = new ArrayList<>();
 
         n = board.length;
@@ -68,13 +68,13 @@ class Solution {
 
     private void dfs(int r, int c, char[][] b, StringBuilder sb, Node node, List<String> res) {
         char ch = b[r][c];
-        Node next = node.get(ch);
+        Node next = node.get(ch); //move to next node
 
         sb.append(ch);
 
         if (next.getEnd()) {
             res.add(sb.toString());
-            next.resetEnd();
+            next.resetEnd(); //remove word from dict to avoid duplicates
         }
 
         b[r][c] = '#';
@@ -84,6 +84,7 @@ class Solution {
         for (int i = 0; i < 4; i++) {
             int nR = r + dR[i], nC = c + dC[i];
 
+            //bound check
             if (nR >= 0 && nR < n && nC >= 0 && nC < m) {
                 char nextCh = b[nR][nC];
                 if (nextCh != '#' && next.containsKey(nextCh)) {
