@@ -20,11 +20,6 @@ class Solution {
                 int left = intervals[intervalIdx][0];
                 int right = intervals[intervalIdx][1];
                 pq.offer(new int[] { left, right });
-
-                if (right >= query) {
-                    pq.offer(new int[] { left, right });
-                }
-
                 intervalIdx++;
             }
 
