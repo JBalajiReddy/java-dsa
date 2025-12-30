@@ -1,6 +1,5 @@
 class Solution {
     int n, m;
-
     public int numMagicSquaresInside(int[][] grid) {
         n = grid.length;
         m = grid[0].length;
@@ -9,6 +8,8 @@ class Solution {
         int cnt = 0;
         for (int i = 0; i < n - 2; i++) {
             for (int j = 0; j < m - 2; j++) {
+                if (grid[i + 1][j + 1] != 5)
+                    continue;
                 if (isMagic(grid, i, j))
                     cnt++;
             }
@@ -21,7 +22,7 @@ class Solution {
         for (int i = r; i < r + 3; i++) {
             for (int j = c; j < c + 3; j++) {
                 int val = grid[i][j];
-                if (val > 9 || val < 1 || !set.add(val)) 
+                if (val > 9 || val < 1 || !set.add(val))
                     return false;
             }
         }
