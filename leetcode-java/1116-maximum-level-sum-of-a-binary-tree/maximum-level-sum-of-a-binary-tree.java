@@ -14,38 +14,34 @@
  * }
  */
 
-class Pair {
-    TreeNode node;
-    int lvl;
-    Pair(TreeNode node, int lvl) {
-        this.node = node;
-        this.lvl = lvl;
-    }
-}
-
 class Solution {
     public int maxLevelSum(TreeNode root) {
-        int maxSum = root.val, lvl = 1;
-        Queue<Pair> q = new LinkedList<>();
-        q.offer(new Pair(root, 1));
+        if (root == null)
+            return 0;
+        int maxSum = Integer.MIN_VALUE;
+        int maxLvl = 1;
+        int currentLevel = 1;
+        Queue<TreeNode> q = new LinkedList<>();
+        q.offer(root);
         while (!q.isEmpty()) {
             int size = q.size();
-            int sum = 0, currLvl = 0;
+            int currentSum = 0;
             for (int i = 0; i < size; i++) {
-                Pair p = q.poll();
-                currLvl = p.lvl;
-                sum += p.node.val;
-                if (p.node.left != null) {
-                    q.offer(new Pair(p.node.left, p.lvl + 1));
-                } if (p.node.right != null) {
-                    q.offer(new Pair(p.node.right, p.lvl + 1));
+                TreeNode node = q.poll();
+                currentSum += node.val;
+                if (node.left != null) {
+                    q.offer(node.left);
+                }
+                if (node.right != null) {
+                    q.offer(node.right);
                 }
             }
-            if (sum > maxSum) {
-                maxSum = sum;
-                lvl = currLvl;
+            if (currentSum > maxSum) {
+                maxSum = currentSum;
+                maxLvl = currentLevel;
             }
+            currentLevel++;
         }
-        return lvl;
+        return maxLvl;
     }
 }
