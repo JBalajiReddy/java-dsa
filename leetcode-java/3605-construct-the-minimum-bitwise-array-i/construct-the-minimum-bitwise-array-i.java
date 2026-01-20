@@ -1,5 +1,4 @@
 class Solution {
-
     public int[] minBitwiseArray(List<Integer> nums) {
         int n = nums.size();
         int[] result = new int[n];
