@@ -13,25 +13,22 @@
  *     }
  * }
  */
-
-//A balanced binary tree, also referred to as a height-balanced binary tree, is defined as a binary tree in which the height of the left and right subtree of any node differ by not more than 1.
 class Solution {
     public boolean isBalanced(TreeNode root) {
-
-        return height(root) == -1 ? false : true;
+        if (root == null) return true;
+        int lH = 0, rH = 0;
+        if (root.left != null)
+            lH = height(root.left);
+        if (root.right != null)
+            rH = height(root.right);
+        return Math.abs(rH - lH) <= 1 && isBalanced(root.left) && isBalanced(root.right);
     }
 
     private int height(TreeNode root) {
-        if (root == null) return 0;
-
-        int lH = height(root.left);
-        if (lH == -1) return -1;
-
-        int rH = height(root.right);
-        if (rH == -1) return -1;
-
-        if (Math.abs(lH - rH) > 1) return -1;
-        
-        return 1 + Math.max(lH, rH);
+        if (root == null)
+            return 0;
+        int lHeight = 1 + height(root.left);
+        int rHeight = 1 + height(root.right);
+        return Math.max(lHeight, rHeight);
     }
 }
