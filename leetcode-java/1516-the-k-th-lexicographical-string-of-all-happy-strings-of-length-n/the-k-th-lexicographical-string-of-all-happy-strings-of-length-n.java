@@ -1,53 +1,25 @@
 class Solution {
-    private int count = 0;
-    private String res = "";
+    String res = "";
+    int cnt = 0;
 
     public String getHappyString(int n, int k) {
-        backtrack(n, k, "");
+        backtrack("", n, k);
         return res;
     }
 
-    public void backtrack(int n, int k, String currStr) {
-        if (currStr.length() == n) {
-            count++;
-            if (count == k) {
-                res = currStr;
+    private void backtrack(String s, int n, int k) {
+        if (s.length() == n) {
+            cnt++;
+            if (cnt == k) {
+                res = s;
             }
             return;
         }
 
-        for (char currChar = 'a'; currChar <= 'c'; currChar++) {
-            if (currStr.length() == 0 || currStr.charAt(currStr.length() - 1) != currChar) {
-                backtrack(n, k, currStr + currChar);
+        for (char ch = 'a'; ch <= 'c'; ch++) {
+            if (s.length() == 0 || s.charAt(s.length() - 1) != ch) {
+                backtrack(s + ch, n, k);
             }
         }
     }
 }
-
-// class Solution {
-//     List<String> list = new ArrayList<>();
-
-//     public String getHappyString(int n, int k) {
-//         String currStr = "";
-//         backtrack(n, currStr);
-//         if (list.size() < k)
-//             return "";
-//         Collections.sort(list);
-//         return list.get(k - 1);
-//     }
-
-//     public void backtrack(int n, String currStr) {
-//         if (currStr.length() == n) {
-//             list.add(currStr);
-//             return;
-//         }
-
-//         for (char currChar = 'a'; currChar <= 'c'; currChar++) {
-//             if (currStr.length() > 0 && currStr.charAt(currStr.length() - 1) == currChar) {
-//                 continue;
-//             } else {
-//                 backtrack(n, currStr + currChar);
-//             }
-//         }
-//     }
-// }
