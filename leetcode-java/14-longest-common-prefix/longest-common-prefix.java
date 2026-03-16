@@ -7,7 +7,7 @@ class Solution {
         for (int i = 1; i < strs.length; i++) {
             String next = strs[i];
             while (!next.startsWith(pf)) {
-                pf = pf.substring(0, pf.length() - 1);
+                pf = pf.substring(0, pf.length() - 1); //shrink
             }
             if (pf.isEmpty())
                 return "";
