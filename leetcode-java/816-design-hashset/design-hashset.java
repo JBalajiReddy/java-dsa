@@ -1,16 +1,19 @@
 class MyHashSet {
     List<Integer> ls;
+
     public MyHashSet() {
-        ls = new ArrayList<>();
+        ls = new LinkedList<>();
     }
-    
+
     public void add(int key) {
         if (!ls.contains(key)) {
             ls.add(key);
         }
     }
-    
+
     public void remove(int key) {
+        if (!ls.contains(key))
+            return;
         for (int i = 0; i < ls.size(); i++) {
             if (ls.get(i) == key) {
                 ls.remove(i);
@@ -18,7 +21,7 @@ class MyHashSet {
             }
         }
     }
-    
+
     public boolean contains(int key) {
         return ls.contains(key);
     }
