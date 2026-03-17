@@ -1,29 +1,21 @@
 class MyHashSet {
-    List<Integer> ls;
+    boolean[] mp;
 
     public MyHashSet() {
-        ls = new LinkedList<>();
+        mp = new boolean[1000001];
+        Arrays.fill(mp, false);
     }
 
     public void add(int key) {
-        if (!ls.contains(key)) {
-            ls.add(key);
-        }
+        mp[key] = true;
     }
 
     public void remove(int key) {
-        if (!ls.contains(key))
-            return;
-        for (int i = 0; i < ls.size(); i++) {
-            if (ls.get(i) == key) {
-                ls.remove(i);
-                break;
-            }
-        }
+        mp[key] = false;
     }
 
     public boolean contains(int key) {
-        return ls.contains(key);
+        return mp[key];
     }
 }
 
