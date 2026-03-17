@@ -3,7 +3,6 @@ class MyHashMap {
     public MyHashMap() {
         mp = new Integer[1000001];
         Arrays.fill(mp, null);
-
     }
     
     public void put(int key, int value) {
