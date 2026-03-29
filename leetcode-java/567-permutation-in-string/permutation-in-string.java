@@ -2,7 +2,8 @@ class Solution {
     public boolean checkInclusion(String s1, String s2) {
         int n = s1.length();
         int m = s2.length();
-        if (m < n) return false;
+        if (m < n)
+            return false;
         int[] mp1 = new int[26];
         int[] mp2 = new int[26];
         for (int i = 0; i < n; i++) {
@@ -15,10 +16,15 @@ class Solution {
             return true;
         }
 
-        //later windows
+        //Slide the window across the rest of s2
+        // The window size remains exactly 'n'. We slide it one character at a time.
         for (int i = 1; i <= m - n; i++) {
-            mp2[s2.charAt(i - 1) - 'a']--; //remove left char
-            mp2[s2.charAt(i + n - 1) - 'a']++; //add righter char
+            // Remove the character that is left behind as the window slides right
+            mp2[s2.charAt(i - 1) - 'a']--;
+
+            // Add the new character that enters the right side of the window
+            // The index (i + n - 1) calculates the rightmost edge of the current window
+            mp2[s2.charAt(i + n - 1) - 'a']++;
             if (isMatched(mp1, mp2)) {
                 return true;
             }
