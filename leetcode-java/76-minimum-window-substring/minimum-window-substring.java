@@ -1,31 +1,38 @@
 class Solution {
     public String minWindow(String s, String t) {
-        if (t.length() > s.length())
+        int m = s.length(), n = t.length();
+        if (n > m)
             return "";
-        if (s.equals(t))
-            return s;
-        Map<Character, Integer> mp = new HashMap<>();
-        for (char c : t.toCharArray())
-            mp.put(c, mp.getOrDefault(c, 0) + 1);
-
-        int left = 0, right = 0, cnt = 0, sIdx = -1, minLen = Integer.MAX_VALUE;
-        while (right < s.length()) {
-            if (mp.containsKey(s.charAt(right)) && mp.get(s.charAt(right)) > 0)
-                cnt++;
-            mp.put(s.charAt(right), mp.getOrDefault(s.charAt(right), 0) - 1);
-
-            while (cnt == t.length()) {
-                if (right - left + 1 < minLen) {
-                    minLen = right - left + 1;
-                    sIdx = left;
-                }
-                mp.put(s.charAt(left), mp.getOrDefault(s.charAt(left), 0) + 1);
-                if (mp.get(s.charAt(left)) > 0)
-                    cnt--;
-                left++;
-            }
-            right++;
+        int[] freq = new int[128];
+        for (char c : t.toCharArray()) {
+            freq[c]++;
         }
-        return sIdx == -1 ? "" : s.substring(sIdx, sIdx + minLen);
+
+        int l = 0, r = 0, cnt = 0, min_len = Integer.MAX_VALUE, sIdx = -1;
+
+        while (r < m) {
+            char c = s.charAt(r);
+            // If the character is required (frequency > 0), increase match count
+            if (freq[c] > 0)
+                cnt++;
+            // Decrement frequency (unneeded characters become negative)
+            freq[c]--;
+
+            while (cnt == n) {
+                if (r - l + 1 < min_len) {
+                    min_len = r - l + 1;
+                    sIdx = l;
+                }
+
+                char cL = s.charAt(l);
+                freq[cL]++;
+                // If it was a required character, our match count drops
+                if (freq[cL] > 0)
+                    cnt--;
+                l++;
+            }
+            r++;
+        }
+        return sIdx == -1 ? "" : s.substring(sIdx, sIdx + min_len);
     }
 }
