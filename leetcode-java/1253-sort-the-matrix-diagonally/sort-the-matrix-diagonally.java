@@ -17,8 +17,8 @@ class Solution {
             }
         }
 
-        res[r - 1][0] = mat[r - 1][0];
-        res[0][c - 1] = mat[0][c - 1];
+        // res[r - 1][0] = mat[r - 1][0];
+        // res[0][c - 1] = mat[0][c - 1];
         return res;
     }
 }
