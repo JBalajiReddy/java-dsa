@@ -36,7 +36,7 @@ class MinStack {
     public int top() {
         long diff = st.peek();
         if (diff > 0) {
-            return (int) (diff + min);
+            return (int) (diff + min); //diff = val - min  →  val = diff + min
         } else {
             return (int) min;
         }
