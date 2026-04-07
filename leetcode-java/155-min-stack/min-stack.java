@@ -21,16 +21,16 @@ class MinStack {
         if (st.isEmpty()) {
             return;
         }
-        long ele = st.pop();
-        if (ele < 0) {
-            min = min - ele;
+        long diff = st.pop();
+        if (diff < 0) {
+            min = min - diff;
         }
     }
     
     public int top() {
-        long top = st.peek();
-        if (top > 0) {
-            return (int) (top + min);
+        long diff = st.peek();
+        if (diff > 0) {
+            return (int) (diff + min);
         } else {
             return (int) min;
         }
