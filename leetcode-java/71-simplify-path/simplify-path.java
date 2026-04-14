@@ -1,19 +1,37 @@
-class Solution {
+// class Solution {
+//     public String simplifyPath(String path) {
+//         String[] parts = path.split("/");
+//         Stack<String> st = new Stack<>();
+//         for (String p : parts) {
+//             if (!p.equals("") && !p.equals(".") && !p.equals("..")) {
+//                 st.push(p);
+//             } else if (!st.isEmpty() && p.equals("..")) {
+//                 st.pop();
+//             }
+//         }
+//         StringBuilder sb = new StringBuilder();
+//         for (String s : st) {
+//             sb.append("/");
+//             sb.append(s);
+//         }
+//         return sb.length() == 0 ? "/" : sb.toString();
+//     }
+// }
+
+
+public class Solution {
     public String simplifyPath(String path) {
-        String[] arr = path.split("/");
         Stack<String> stack = new Stack<>();
-        for (String s : arr) {
-            if (!s.equals("") && !s.equals(".") && !s.equals(".."))
-                stack.push(s);
-            else if (!stack.isEmpty() && s.equals(".."))
-                stack.pop();
+        String[] paths = path.split("/");
+
+        for (String cur : paths) {
+            if (cur.equals("..")) {
+                if (!stack.isEmpty()) stack.pop();
+            } else if (!cur.equals("") && !cur.equals(".")) {
+                stack.push(cur);
+            }
         }
 
-        StringBuilder res = new StringBuilder();
-        for (String s : stack) {
-            res.append("/");
-            res.append(s);
-        }
-        return res.length() == 0 ? "/" : res.toString();
+        return "/" + String.join("/", stack);
     }
 }
