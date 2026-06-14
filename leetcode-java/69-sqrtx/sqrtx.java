@@ -5,7 +5,7 @@ class Solution {
         int ans = x;
         while (l <= r) {
             int m = l + (r - l) / 2;
-            if (m <= x / m) {
+            if (m <= x / m) { //m * m <= x
                 ans = m;
                 l = m + 1;
             } else {
