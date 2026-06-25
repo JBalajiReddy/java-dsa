@@ -1,35 +1,43 @@
 class TimeMap {
-    Map<String, TreeMap<Integer, String>> map;
+    class Data {
+        int timestamp;
+        String value;
+
+        Data(int timestamp, String value) {
+            this.timestamp = timestamp;
+            this.value = value;
+        }
+    }
+
+    private Map<String, List<Data>> mp;
 
     public TimeMap() {
-        map = new HashMap<>();
+        mp = new HashMap<>();
     }
-    
+
     public void set(String key, String value, int timestamp) {
-        // If key doesn't exist, create a new TreeMap for it
-        map.putIfAbsent(key, new TreeMap<>());
-        
-        // Add the value at the specific timestamp for this key
-        map.get(key).put(timestamp, value);
+        mp.putIfAbsent(key, new ArrayList<>());
+        mp.get(key).add(new Data(timestamp, value));
     }
-    
+
     public String get(String key, int timestamp) {
-        // If the key strictly doesn't exist, return ""
-        if (!map.containsKey(key)) {
+        List<Data> ls = mp.get(key);
+        if (ls == null) {
             return "";
         }
-        
-        TreeMap<Integer, String> timeMap = map.get(key);
-        
-        // 2. Efficiently find the largest timestamp <= requested timestamp
-        // floorKey returns the greatest key less than or equal to the given key, or null if there is no such key.
-        Integer prevTime = timeMap.floorKey(timestamp);
-        
-        if (prevTime == null) {
-            return "";
+        int l = 0, r = ls.size() - 1;
+        String res = "";
+        while (l <= r) {
+            int m = l + (r - l) / 2;
+            int timestamp_prev = ls.get(m).timestamp;
+            if (timestamp_prev <= timestamp) {
+                res = ls.get(m).value;
+                l = m + 1;
+            } else {
+                r = m - 1;
+            }
         }
-        
-        return timeMap.get(prevTime);
+        return res;
     }
 }
 
