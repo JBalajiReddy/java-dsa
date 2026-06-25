@@ -1,32 +1,34 @@
 class Solution {
     public int splitArray(int[] nums, int k) {
-        int low = 0, high = 0;
-        for (int n : nums) {
-            low = Math.max(low, n);
-            high += n;
+        int l = 0, r = 0;
+        for (int num : nums) {
+            l = Math.max(l, num);
+            r += num;
         }
 
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
-            if (isPossible(mid, nums, k) > k) {
-                low = mid + 1; //not possible, increase limit
+        int res = -1;
+        while (l <= r) {
+            int m = l + (r - l) / 2;
+            if (isPossible(nums, k, m)) {
+                res = m;
+                r = m - 1;
             } else {
-                high = mid - 1; //possible limit, try to minimize
+                l = m + 1;
             }
         }
-        return low;
+
+        return res;
     }
 
-    private int isPossible(int limit, int[] arr, int k) {
-        int sum = 0, cnt = 1;
-        for (int i = 0; i < arr.length; i++) {
-            if (sum + arr[i] <= limit) {
-                sum += arr[i];
-            } else {
+    private boolean isPossible(int[] nums, int k, int limit) {
+        int cnt = 1, sum = 0;
+        for (int n : nums) {
+            sum += n;
+            if (sum > limit) {
                 cnt++;
-                sum = arr[i];
+                sum = n;
             }
         }
-        return cnt;
+        return cnt <= k;
     }
 }
