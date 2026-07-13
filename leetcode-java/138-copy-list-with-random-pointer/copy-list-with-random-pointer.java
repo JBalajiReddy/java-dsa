@@ -12,27 +12,29 @@ class Node {
     }
 }
 */
-
 class Solution {
     public Node copyRandomList(Node head) {
-        Map<Node, Node> map = new HashMap<>();
-        Node node = head;
+        HashMap<Node, Node> mp = new HashMap<>();
+        mp.put(null, null);
 
-        //create copies
-        while (node != null) {
-            map.put(node, new Node(node.val));
-            node = node.next;
+        Node cur = head;
+        while (cur != null) {
+            if (!mp.containsKey(cur)) {
+                mp.put(cur, new Node(0));
+            }
+            mp.get(cur).val = cur.val;
+
+            if (!mp.containsKey(cur.next)) {
+                mp.put(cur.next, new Node(0));
+            }
+            mp.get(cur).next = mp.get(cur.next);
+
+            if (!mp.containsKey(cur.random)) {
+                mp.put(cur.random, new Node(0));
+            }
+            mp.get(cur).random = mp.get(cur.random);
+            cur = cur.next;
         }
-
-        //assign next, random pointers
-        node = head;
-        while (node != null) {
-            Node cpNode = map.get(node);
-            cpNode.next = map.get(node.next);
-            cpNode.random = map.get(node.random);
-            node = node.next;
-        }
-
-        return map.get(head);
+        return mp.get(head);
     }
 }
