@@ -1,21 +1,27 @@
 class Solution {
     public int findDuplicate(int[] nums) {
-        int slow = nums[0];
-        int fast = nums[0];
-
-        do {
-            slow = nums[slow]; // +1
-            fast = nums[nums[fast]]; // +2
-        } while (slow != fast);
-
-        slow = nums[0]; //reset slow ptr
-
-        while (slow != fast) {
-            slow = nums[slow]; // +1
-            fast = nums[fast]; // +1
+        int n = nums.length;
+        int res = 0;
+        for (int b = 0; b < 32; b++) {
+            int x = 0, y = 0;
+            int mask = 1 << b;
+            for (int num : nums) {
+                if ((num & mask) != 0) {
+                    x++;
+                }
+            }
+            for (int num = 1; num < n; num++) {
+                if ((num & mask) != 0) {
+                    y++;
+                }
+            }
+            
+            //If the array has more 1s at this position than expected, 
+            // the duplicate number must have this bit set to 1.
+            if (x > y) {
+                res = res | mask;
+            }
         }
-        return slow;
+        return res;
     }
 }
-
-//Floyd's Cycle Detection
