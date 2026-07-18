@@ -9,46 +9,45 @@ class LRUCache {
         }
     }
 
-    private int capacity;
-    private HashMap<Integer, Node> map;
-    private Node head;
-    private Node tail;
+    private Node head, tail;
+    private int size;
+    private Map<Integer, Node> mp;
 
     public LRUCache(int capacity) {
-        this.capacity = capacity;
-        map = new HashMap<>();
-        head = new Node(0, 0);
-        tail = new Node(0, 0);
+        size = capacity;
+        mp = new HashMap<>();
+        head = new Node(-1, -1);
+        tail = new Node(-1, -1);
 
         head.next = tail;
         tail.prev = head;
     }
 
     public int get(int key) {
-        if (!map.containsKey(key))
+        if (!mp.containsKey(key)) {
             return -1;
-        else {
-            Node node = map.get(key);
-            moveToFront(node);
-            return node.val;
         }
+        Node node = mp.get(key);
+        moveToFront(node);
+        return node.val;
     }
 
     public void put(int key, int value) {
-        if (map.containsKey(key)) {
-            Node node = map.get(key);
+        if (mp.containsKey(key)) {
+            Node node = mp.get(key);
             node.val = value;
             moveToFront(node);
         } else {
-            if (map.size() == capacity) {
-                Node node = tail.prev;
-                remove(node);
-                map.remove(node.key);
+            if (mp.size() == size) {
+                Node lruNode = tail.prev;
+                remove(lruNode);
+                mp.remove(lruNode.key);
             }
 
             Node newNode = new Node(key, value);
-            map.put(key, newNode);
-            insertAtFront(newNode);
+            mp.put(key, newNode);
+            InsertAtFront(newNode);
+
         }
     }
 
@@ -57,16 +56,16 @@ class LRUCache {
         node.next.prev = node.prev;
     }
 
-    private void insertAtFront(Node node) {
-       node.next = head.next;
-       node.prev = head.next.prev;
-       head.next.prev = node;
-       head.next = node;
+    private void InsertAtFront(Node node) {
+        node.next = head.next;
+        node.prev = head;
+        head.next.prev = node;
+        head.next = node;
     }
 
     private void moveToFront(Node node) {
         remove(node);
-        insertAtFront(node);
+        InsertAtFront(node);
     }
 }
 
