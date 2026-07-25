@@ -13,45 +13,69 @@
  *     }
  * }
  */
+
 class Solution {
     public TreeNode deleteNode(TreeNode root, int key) {
-        if (root == null)
+        if (root == null) {
             return root;
-        if (root.val == key)
-            return helper(root);
-        TreeNode node = root;
+        }
 
-        while (node != null) {
-            if (node.val < key) {
-                if (node.right != null && node.right.val == key) {
-                    node.right = helper(node.right);
+        if (root.val == key) {
+            return helper(root);
+        }
+
+        TreeNode curr = root;
+
+        //traverse and find parent of key
+        while (curr != null) {
+            if (curr.val > key) {
+                if ((curr.left != null) && (curr.left.val == key)) {
+                    curr.left = helper(curr.left);
                     break;
-                } else
-                    node = node.right;
+                } else {
+                    curr = curr.left;
+                }
             } else {
-                if (node.left != null && node.left.val == key) {
-                    node.left = helper(node.left);
+                if ((curr.right != null) && (curr.right.val == key)) {
+                    curr.right = helper(curr.right);
                     break;
-                } else
-                    node = node.left;
+                } else {
+                    curr = curr.right;
+                }
             }
         }
+
         return root;
     }
 
-    private TreeNode helper(TreeNode root) {
-        if (root.left == null) return root.right;
-        else if (root.right == null) return root.left;
- 
-        //left and right are not null
-        TreeNode rChild = root.right;
-        TreeNode leftGreatestRight = greatestRight(root.left);
-        leftGreatestRight.right = rChild;
-        return root.left;
+    /**
+     * Removes targetNode and re-attaches its left and right subtrees 
+     * while preserving the BST property.
+     */
+    private TreeNode helper(TreeNode node) { //targetNode
+        if (node.left == null) {
+            return node.right;
+        } 
+        
+        if (node.right == null) {
+            return node.left;
+        }
+
+        //targetNode has both left and right children
+        TreeNode rightSubtree = node.right;
+        TreeNode maxNodeInLeftSubtree = findMaxNode(node.left);
+
+        // Attach targetNode's entire right subtree to the right of the largest node in left subtree
+        maxNodeInLeftSubtree.right = rightSubtree;
+
+        // Finds the node with the maximum value in a subtree (the rightmost node).
+        return node.left;
     }
 
-    private TreeNode greatestRight(TreeNode root) {
-        if (root.right == null) return root;
-        return greatestRight(root.right);
+    private TreeNode findMaxNode(TreeNode node) {
+        while (node.right != null) {
+            node = node.right;
+        }
+        return node;
     }
 }
