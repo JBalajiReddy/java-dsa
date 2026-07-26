@@ -50,17 +50,17 @@ class Solution {
         }
 
         int mid = n / 2;
-        
+
         // Divide into 4 quadrants using (r, c) offsets
-        Node topLeft     = dfs(grid, mid, r,       c);
-        Node topRight    = dfs(grid, mid, r,       c + mid);
-        Node bottomLeft  = dfs(grid, mid, r + mid, c);
+        Node topLeft = dfs(grid, mid, r, c);
+        Node topRight = dfs(grid, mid, r, c + mid);
+        Node bottomLeft = dfs(grid, mid, r + mid, c);
         Node bottomRight = dfs(grid, mid, r + mid, c + mid);
 
         // Conquer: Check if all 4 quadrants can be merged into 1 leaf
         if (topLeft.isLeaf && topRight.isLeaf && bottomLeft.isLeaf && bottomRight.isLeaf
-                && topLeft.val == topRight.val 
-                && topRight.val == bottomLeft.val 
+                && topLeft.val == topRight.val
+                && topRight.val == bottomLeft.val
                 && bottomLeft.val == bottomRight.val) {
             return new Node(topLeft.val, true); // Compact 4 leaves into 1 parent leaf
         }
