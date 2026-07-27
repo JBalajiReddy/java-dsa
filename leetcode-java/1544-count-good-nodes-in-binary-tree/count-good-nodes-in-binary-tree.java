@@ -13,55 +13,24 @@
  *     }
  * }
  */
-
 class Solution {
-    int cnt = 0;
     public int goodNodes(TreeNode root) {
-        dfs(root, root.val);
-        return cnt;
+        int[] cnt = { 0 };
+        dfs(root, cnt, root.val);
+        return cnt[0];
     }
-    private void dfs(TreeNode node, int maxInPath) {
-        if (node == null) return;
-        if (node.val >= maxInPath) cnt++;
-        maxInPath = Math.max(maxInPath, node.val);
-        dfs(node.left, maxInPath);
-        dfs(node.right, maxInPath);
+
+    private void dfs(TreeNode root, int[] cnt, int max) {
+        if (root == null) {
+            return;
+        }
+
+        if (root.val >= max) {
+            cnt[0]++;
+            max = root.val;
+        }
+
+        dfs(root.left, cnt, max);
+        dfs(root.right, cnt, max);
     }
 }
-
-// class Solution {
-//     class Pair {
-//         TreeNode node;
-//         int max;
-//         Pair(TreeNode node, int max) {
-//             this.node = node;
-//             this.max = max;
-//         }
-//     }
-
-//     public int goodNodes(TreeNode root) {
-//         Queue<Pair> q = new LinkedList<>();
-//         q.offer(new Pair(root, root.val));
-//         int cnt = 0;
-//         while (!q.isEmpty()) {
-//             int size = q.size();
-//             for (int i = 0; i < size; i++) {
-//                 Pair p = q.poll();
-//                 TreeNode node = p.node;
-//                 int max = p.max;
-
-//                 if (node.val >= max) cnt++;
-//                 max = Math.max(max, node.val);
-
-//                 if (node.left != null) {
-//                     q.offer(new Pair(node.left, max));
-//                 }
-
-//                 if (node.right != null) {
-//                     q.offer(new Pair(node.right, max));
-//                 }
-//             }
-//         }
-//         return cnt;
-//     }
-// }
