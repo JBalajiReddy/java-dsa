@@ -37,8 +37,8 @@ class Solution {
 
 /**
 
-For a left child, the upper bound determines validity because its value can extend down to $-\infty$, but it can never exceed its parent.
+For a left child, the upper bound determines validity because its value can extend down to -INFINITY, but it can never exceed its parent.
 
-For a right child, the lower bound determines validity because its value can extend up to $+\infty$, but it can never drop below its parent.
+For a right child, the lower bound determines validity because its value can extend up to +INFINITY, but it can never drop below its parent.
 
 */
