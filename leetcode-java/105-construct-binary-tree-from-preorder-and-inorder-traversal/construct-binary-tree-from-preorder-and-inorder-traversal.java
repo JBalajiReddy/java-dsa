@@ -13,29 +13,30 @@
  *     }
  * }
  */
+
 class Solution {
-
-    int preIdx = 0;
-
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        return build(preorder, inorder, 0, inorder.length - 1);
+        // build a map to store inorder value -> index for O(1) lookup
+        Map<Integer, Integer> inorderMap = new HashMap<>();
+        for (int i = 0; i < inorder.length; i++) {
+            inorderMap.put(inorder[i], i);
+        }
+
+        int[] preIdx = {0};
+        return build(preorder, inorderMap, preIdx, 0, inorder.length - 1);
     }
 
-    public TreeNode build(int[] preorder, int[] inorder, int inStart, int inEnd) {
-        if (inStart > inEnd)
-            return null;
+    private TreeNode build(int[] preorder, Map<Integer, Integer> inorderMap, int[] preIdx, int start, int end) {
+        if (start > end) return null;
 
-        int rootVal = preorder[preIdx++];
+        int rootVal = preorder[preIdx[0]++];
         TreeNode root = new TreeNode(rootVal);
-        int rootIdx = inStart;
-        for (int i = inStart; i <= inEnd; i++) {
-            if (inorder[i] == rootVal) {
-                rootIdx = i;
-                break;
-            }
-        }
-        root.left = build(preorder, inorder, inStart, rootIdx - 1);
-        root.right = build(preorder, inorder, rootIdx + 1, inEnd);
+
+        int rootIdx = inorderMap.get(rootVal);
+
+        root.left = build(preorder, inorderMap, preIdx, start, rootIdx - 1);
+        root.right = build(preorder, inorderMap, preIdx, rootIdx + 1, end);
+
         return root;
     }
 }
