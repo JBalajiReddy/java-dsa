@@ -15,6 +15,7 @@
  */
 class Solution {
     private int num, cnt;
+
     public int kthSmallest(TreeNode root, int k) {
         cnt = k;
         dfs(root);
@@ -22,11 +23,14 @@ class Solution {
     }
 
     private void dfs(TreeNode root) {
-        if (root == null) {
+        if (root == null || cnt == 0) { // Stop early if answer is already found
             return;
         }
 
         dfs(root.left);
+
+        if (cnt == 0)
+            return; // Prevent unnecessary work
 
         cnt--;
         if (cnt == 0) {
