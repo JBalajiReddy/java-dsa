@@ -1,5 +1,40 @@
 class Solution {
     public int leastInterval(char[] tasks, int n) {
+        // Step 1: Count frequency of each task
+        int[] freq = new int[26];
+        for (char task : tasks) {
+            freq[task - 'A']++;
+        }
+
+        // Step 2: Find the maximum frequency among all tasks
+        int maxFreq = 0;
+        for (int f : freq) {
+            maxFreq = Math.max(maxFreq, f);
+        }
+
+        // Step 3: Count how many tasks share this maximum frequency
+        int countMax = 0;
+        for (int f : freq) {
+            if (f == maxFreq) {
+                countMax++;
+            }
+        }
+
+        // Step 4: Calculate minimal CPU slots required based on frame structure
+        // (maxFreq - 1) gives full cooling chunks, each chunk of size (n + 1).
+        // countMax accounts for the last trailing group of max-frequency tasks.
+        int ans = (maxFreq - 1) * (n + 1) + countMax;
+
+        // Step 5: Handle edge cases where total tasks exceeds calculated frames
+        // Gotcha: If we have enough unique tasks to naturally fill all empty slots,
+        // no IDLE time is needed, making the answer equal to the array length.
+        return Math.max(tasks.length, ans);
+    }
+}
+
+
+class Solution_PriorityQueue {
+    public int leastInterval(char[] tasks, int n) {
         int[] cnt = new int[26];
         for (char t : tasks) {
             cnt[t - 'A']++;
