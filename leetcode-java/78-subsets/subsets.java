@@ -1,14 +1,20 @@
 class Solution {
     public List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
-        int subsets = 1 << nums.length;
-        for (int i = 0; i < subsets; i++) {
-            List<Integer> ls = new ArrayList<>();
-            for (int j = 0; j < nums.length; j++) {
-                if ((i & (1 << j)) != 0) ls.add(nums[j]);
-            }
-            res.add(ls);
-        }
+        List<Integer> tmp = new ArrayList<>();
+        backtrack(nums, 0, tmp, res);
         return res;
+    }
+
+    private void backtrack(int[] nums, int i, List<Integer> tmp, List<List<Integer>> res) {
+        if (i == nums.length) {
+            res.add(new ArrayList<>(tmp)); //shallow copy since objects are mutable (they all point to same ref)
+            return;
+        }
+
+        tmp.add(nums[i]);
+        backtrack(nums, i + 1, tmp, res);
+        tmp.remove(tmp.size() - 1);
+        backtrack(nums, i + 1, tmp, res);
     }
 }
