@@ -8,7 +8,6 @@ class Solution {
     }
 
     private void backtrack(String s, int start, List<String> ls) {
-
         if (start == s.length()) {
             res.add(new ArrayList<>(ls));
             return;
@@ -18,6 +17,7 @@ class Solution {
             String sub = s.substring(start, end + 1);
             if (isPalindrome(sub)) {
                 ls.add(sub);
+
                 backtrack(s, end + 1, ls);
 
                 ls.remove(ls.size() - 1);
@@ -26,11 +26,13 @@ class Solution {
     }
 
     private boolean isPalindrome(String s) {
-        int i = 0;
-        int j = s.length() - 1;
-        while (i < j) {
-            if (s.charAt(i++) != s.charAt(j--))
+        int start = 0, end = s.length() - 1;
+        while (start < end) {
+            if (s.charAt(start) != s.charAt(end)) {
                 return false;
+            }
+            start++;
+            end--;
         }
         return true;
     }
