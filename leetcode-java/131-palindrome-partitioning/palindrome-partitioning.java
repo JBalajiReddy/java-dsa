@@ -46,3 +46,54 @@ class Solution {
         }
     }
 }
+
+class Solution_BruteForce {
+    private List<List<String>> res;
+
+    public List<List<String>> partition(String s) {
+        res = new ArrayList<>();
+        // Start backtracking from index 0 with an empty list of path choices
+        backtrack(s, 0, new ArrayList<>());
+        return res;
+    }
+
+    private void backtrack(String s, int start, List<String> ls) {
+        // BASE CASE: If 'start' reaches the end of the string,
+        // we have successfully partitioned the whole string into palindromes.
+        if (start == s.length()) {
+            // Make a shallow copy of 'ls' because 'ls' is mutated during backtracking
+            res.add(new ArrayList<>(ls));
+            return;
+        }
+
+        // EXPLORE CHOICES: Try cutting the substring s[start ... end]
+        for (int end = start; end < s.length(); end++) {
+            String sub = s.substring(start, end + 1);
+
+            // PRUNING / CONSTRAINT CHECK: Only move deeper if 'sub' is a palindrome
+            if (isPalindrome(sub)) {
+                // CHOICE: Include 'sub' in current partition list
+                ls.add(sub);
+
+                // RECURSE: Solve the remaining substring starting at index 'end + 1'
+                backtrack(s, end + 1, ls);
+
+                // UNDO CHOICE (Backtrack): Remove 'sub' to explore other possibilities in the loop
+                ls.remove(ls.size() - 1);
+            }
+        }
+    }
+
+    // Standard Two-Pointer Palindrome Check
+    private boolean isPalindrome(String s) {
+        int start = 0, end = s.length() - 1;
+        while (start < end) {
+            if (s.charAt(start) != s.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+}
