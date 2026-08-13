@@ -31,6 +31,7 @@ class Solution {
 
         for (int col = 0; col < n; col++) {
             int d1 = row - col + n; //top-left to bottom-right share same value of (row - col) + N to avoid -ve array idx
+            //for d1 (main diag) i == j
             int d2 = row + col; //top-right to bottom-left diagonal share the same value of (row + col)
 
             // conflict check
