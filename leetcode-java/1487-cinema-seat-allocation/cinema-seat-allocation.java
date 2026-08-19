@@ -23,21 +23,21 @@ class Solution {
          *    - If seats 2-5 have any reservation, ORing will set extra bits in 0-3,
          *      making (bitmask | left) != left.
          */
-        int left = 0b11110000;   
+        int left = 0b11110000;
 
         /*
          * 2. MIDDLE BLOCK needs seats 4, 5, 6, 7 (bits 2, 3, 4, 5) to be FREE (0).
          *    Mask `middle` = 0b11000011 (bits 0, 1, 6, 7 set to 1).
          *    - Bits 2-5 MUST be 0 for (bitmask | middle) == middle to hold true.
          */
-        int middle = 0b11000011; 
+        int middle = 0b11000011;
 
         /*
          * 3. RIGHT BLOCK needs seats 6, 7, 8, 9 (bits 4, 5, 6, 7) to be FREE (0).
          *    Mask `right` = 0b00001111 (bits 0-3 set to 1).
          *    - Bits 4-7 MUST be 0 for (bitmask | right) == right to hold true.
          */
-        int right = 0b00001111;  
+        int right = 0b00001111;
 
         // Map key: row number -> Map value: 8-bit integer tracking reserved seats
         Map<Integer, Integer> occupied = new HashMap<>();
@@ -50,7 +50,7 @@ class Solution {
             // so we ignore them completely.
             if (col >= 2 && col <= 9) {
                 int currentMask = occupied.getOrDefault(row, 0);
-                
+
                 // (col - 2) shifts seat index so seat 2 becomes bit 0, seat 9 becomes bit 7.
                 // Bitwise OR '|=' sets that specific bit to 1 (marking the seat reserved).
                 occupied.put(row, currentMask | (1 << (col - 2)));
@@ -79,9 +79,9 @@ class Solution {
              * - If `bitmask` has a 1 in a required position, `(bitmask | mask)` 
              *   will set a bit where `mask` had a 0, changing its value!
              */
-            if ((bitmask | left) == left || 
-                (bitmask | middle) == middle || 
-                (bitmask | right) == right) {
+            if ((bitmask | left) == left ||
+                    (bitmask | middle) == middle ||
+                    (bitmask | right) == right) {
                 maxFamilies++;
             }
         }
@@ -90,15 +90,21 @@ class Solution {
     }
 }
 
-
 class Solution_BitMasking {
     public int maxNumberOfFamilies(int n, int[][] reservedSeats) {
         Map<Integer, Integer> mp = new HashMap<>(); //row -> bitmask of booked seats
 
-        for(int[] reservedSeat : reservedSeats) { //O(10^4)
-            int row  = reservedSeat[0];
+        for (int[] reservedSeat : reservedSeats) { //O(10^4)
+            int row = reservedSeat[0];
             int seat = reservedSeat[1];
             mp.merge(row, (1 << seat), (a, b) -> a | b); //set bits are the booked seats
+
+            // Traditional Approach:
+            //int existingMask = mp.getOrDefault(row, 0);
+            //mp.put(row, existingMask | (1 << seat));
+
+            // Concise Approach using merge():
+            // mp.merge(row, (1 << seat), (a, b) -> a | b);
         }
 
         int result = (n - mp.size()) * 2;
@@ -107,16 +113,16 @@ class Solution_BitMasking {
         int maskB = (1 << 4) | (1 << 5) | (1 << 6) | (1 << 7); //set bits are the ones I need empty for Group B
         int maskC = (1 << 6) | (1 << 7) | (1 << 8) | (1 << 9); //set bits are the ones I need empty for Group C
 
-        for(Map.Entry<Integer, Integer> entry : mp.entrySet()) { //min(10*n, 10^4)
+        for (Map.Entry<Integer, Integer> entry : mp.entrySet()) { //min(10*n, 10^4)
             int bookedSeatsMask = entry.getValue();
 
             boolean groupA = (bookedSeatsMask & maskA) == 0;
             boolean groupB = (bookedSeatsMask & maskB) == 0;
             boolean groupC = (bookedSeatsMask & maskC) == 0;
 
-            if(groupA && groupC)
+            if (groupA && groupC)
                 result += 2;
-            else if(groupA || groupB || groupC)
+            else if (groupA || groupB || groupC)
                 result += 1;
         }
 
@@ -128,24 +134,27 @@ class Solution_HashMap {
     public int maxNumberOfFamilies(int n, int[][] reservedSeats) {
         Map<Integer, Set<Integer>> mp = new HashMap<>(); //row -> seats booked in each row
 
-        for(int[] reservedSeat : reservedSeats) {
-            int row  = reservedSeat[0];
+        for (int[] reservedSeat : reservedSeats) {
+            int row = reservedSeat[0];
             int seat = reservedSeat[1];
             mp.computeIfAbsent(row, k -> new HashSet<>()).add(seat);
         }
 
         int result = (n - mp.size()) * 2;
 
-        for(Map.Entry<Integer, Set<Integer>> entry : mp.entrySet()) {
+        for (Map.Entry<Integer, Set<Integer>> entry : mp.entrySet()) {
             Set<Integer> bookedSeats = entry.getValue();
 
-            boolean groupA = !bookedSeats.contains(2) && !bookedSeats.contains(3) && !bookedSeats.contains(4) && !bookedSeats.contains(5);
-            boolean groupB = !bookedSeats.contains(4) && !bookedSeats.contains(5) && !bookedSeats.contains(6) && !bookedSeats.contains(7);
-            boolean groupC = !bookedSeats.contains(6) && !bookedSeats.contains(7) && !bookedSeats.contains(8) && !bookedSeats.contains(9);
+            boolean groupA = !bookedSeats.contains(2) && !bookedSeats.contains(3) && !bookedSeats.contains(4)
+                    && !bookedSeats.contains(5);
+            boolean groupB = !bookedSeats.contains(4) && !bookedSeats.contains(5) && !bookedSeats.contains(6)
+                    && !bookedSeats.contains(7);
+            boolean groupC = !bookedSeats.contains(6) && !bookedSeats.contains(7) && !bookedSeats.contains(8)
+                    && !bookedSeats.contains(9);
 
-            if(groupA && groupC)
+            if (groupA && groupC)
                 result += 2;
-            else if(groupA || groupB || groupC)
+            else if (groupA || groupB || groupC)
                 result += 1;
         }
 
