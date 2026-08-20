@@ -2,7 +2,7 @@ class Solution {
     public int[] resultArray(int[] nums) {
         int n = nums.length;
         int[] res = new int[n];
-        int m = n / 2;
+
         res[0] = nums[0];
         res[n - 1] = nums[1];
         
