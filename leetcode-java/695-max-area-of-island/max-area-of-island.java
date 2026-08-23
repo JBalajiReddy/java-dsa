@@ -21,6 +21,7 @@ class Solution {
 
         vis[i][j] = true;
 
-        return 1 + dfs(i, j + 1, g, vis) + dfs(i + 1, j, g, vis) + dfs(i, j - 1, g, vis) + dfs(i - 1, j, g, vis);
+        return 1 + dfs(i, j + 1, g, vis) + dfs(i + 1, j, g, vis) + dfs(i, j - 1, g, vis)
+            + dfs(i - 1, j, g, vis);
     }
 }
