@@ -19,51 +19,57 @@ class Node {
 */
 
 class Solution {
-    // HashMap acts as our memory to prevent cycles and redundant work
-    private HashMap<Node, Node> map = new HashMap<>();
-
     public Node cloneGraph(Node node) {
-        // Base case: Empty graph
-        if (node == null) return null;
+        // Map stores: Original Node -> Cloned Node
+        Map<Node, Node> mp = new HashMap<>();
+        return dfs(node, mp);
+    }
 
-        // Base case: If we have already visited/cloned this node, return the clone
-        if (map.containsKey(node)) {
-            return map.get(node);
+    private Node dfs(Node node, Map<Node, Node> mp) {
+        // Edge case: empty graph input
+        if (node == null) {
+            return null;
         }
 
-        // 1. Create the clone immediately
-        Node cloneNode = new Node(node.val);
-        
-        // 2. Register it in the map BEFORE processing neighbors
-        // This is crucial for handling cycles (e.g., A -> B -> A)
-        map.put(node, cloneNode);
-
-        // 3. Recursively clone all neighbors
-        for (Node neighbor : node.neighbors) {
-            cloneNode.neighbors.add(cloneGraph(neighbor));
+        // Cycle/Duplicate Check: If already cloned, return the existing clone reference
+        if (mp.containsKey(node)) {
+            return mp.get(node);
         }
 
-        return cloneNode;
+        // Step 1: Clone the value of current node
+        Node copy = new Node(node.val);
+
+        // Step 2: Register in map BEFORE recursive calls to handle cycle back-edges
+        mp.put(node, copy);
+
+        // Step 3: Recursively clone and link all neighbors
+        for (Node neigh : node.neighbors) {
+            copy.neighbors.add(dfs(neigh, mp));
+        }
+
+        return copy;
     }
 }
 
-// class Solution {
-//     public Node cloneGraph(Node node) {
-//         if (node == null) return null;
-//         HashMap<Node, Node> mp = new HashMap<>();
-//         Queue<Node> q = new LinkedList<>();
-//         q.offer(node);
-//         mp.put(node, new Node(node.val));
-//         while (!q.isEmpty()) {
-//             Node curr = q.poll();
-//             for (Node neigh : curr.neighbors) {
-//                 if (!mp.containsKey(neigh)) {
-//                     mp.put(neigh, new Node(neigh.val));
-//                     q.offer(neigh);
-//                 }
-//                 mp.get(curr).neighbors.add(mp.get(neigh));
-//             }
-//         }
-//         return mp.get(node);
-//     }
-// }
+class Solution_BFS {
+    public Node cloneGraph(Node node) {
+        if (node == null)
+            return null;
+        Map<Node, Node> oldToNew = new HashMap<>();
+        Queue<Node> q = new LinkedList<>();
+        oldToNew.put(node, new Node(node.val));
+        q.add(node);
+
+        while (!q.isEmpty()) {
+            Node cur = q.poll();
+            for (Node nei : cur.neighbors) {
+                if (!oldToNew.containsKey(nei)) {
+                    oldToNew.put(nei, new Node(nei.val));
+                    q.add(nei);
+                }
+                oldToNew.get(cur).neighbors.add(oldToNew.get(nei));
+            }
+        }
+        return oldToNew.get(node);
+    }
+}
