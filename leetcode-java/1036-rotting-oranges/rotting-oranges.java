@@ -1,55 +1,60 @@
 class Solution {
-    class Pair {
-        int r, c, tm;
-        Pair(int r, int c, int tm) {
-            this.r = r;
-            this.c = c;
-            this.tm = tm;
-        }
-    }
-
     public int orangesRotting(int[][] grid) {
-        Queue<Pair> q = new LinkedList<>();
-        int n = grid.length;
-        int m = grid[0].length;
-        int[][] vis = new int[n][m];
+        int r = grid.length;
+        int c = grid[0].length;
+        
+        Queue<int[]> q = new ArrayDeque<>();
+        
+        int fresh = 0; 
+        int mins = 0; 
 
-        int cntFresh= 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
+        // 1. Scan the grid to initialize state:
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
                 if (grid[i][j] == 2) {
-                    q.offer(new Pair(i, j, 0));
-                    vis[i][j] = 1;
+                    q.offer(new int[] { i, j }); // Multi-source starting points
                 } else if (grid[i][j] == 1) {
-                    cntFresh++;
-                    vis[i][j] = 0;
-                } else {
-                    vis[i][j] = 0;
+                    fresh++;
                 }
             }
         }
 
-        int time = 0, cnt = 0;
-        int[] dRow = {-1, 0, +1, 0};
-        int[] dCol = {0, +1, 0, -1};
-        while (!q.isEmpty()) {
-            Pair pair = q.poll();
-            int row = pair.r;
-            int col = pair.c;
-            int t = pair.tm;
-            time = Math.max(time, t);
-
-            for (int i = 0; i < 4; i++) {
-                int nRow = row + dRow[i];
-                int nCol = col + dCol[i];
-                if (nRow >= 0 && nRow < n && nCol >= 0 && nCol < m && vis[nRow][nCol] == 0 && grid[nRow][nCol] == 1) {
-                    q.offer(new Pair(nRow, nCol, t + 1));
-                    vis[nRow][nCol] = 1;
-                    cnt++;
-                }
-            }
+        // Edge case: If there are no fresh oranges at start, 0 minutes are needed
+        if (fresh == 0) {
+            return 0;
         }
 
-        return cnt == cntFresh ? time : -1;
+        // [Right, Down, Left, Up]
+        int[][] dir = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+
+        // 2. Perform Multi-Source BFS layer-by-layer:
+        //    - Stopping condition includes `fresh > 0` to avoid an extra minute increment 
+        //      when the queue has nodes that don't infect any new fresh oranges.
+        while (!q.isEmpty() && fresh > 0) {
+            // Snapshot queue size to process all oranges rotten during the CURRENT minute
+            int size = q.size();
+            
+            for (int k = 0; k < size; k++) {
+                int[] cell = q.poll();
+                int row = cell[0], col = cell[1];
+                
+                // Explore all 4 adjacent neighbors
+                for (int i = 0; i < 4; i++) {
+                    int nR = dir[i][0] + row;
+                    int nC = dir[i][1] + col;
+                    
+                    // Check boundary limits & verify if the adjacent neighbor is fresh
+                    if (nR < r && nR >= 0 && nC < c && nC >= 0 && grid[nR][nC] == 1) {
+                        grid[nR][nC] = 2;
+                        q.offer(new int[] { nR, nC }); 
+                        fresh--; 
+                    }
+                }
+            }
+            // Increment minutes elapsed only after processing the ENTIRE current BFS layer
+            mins++;
+        }
+
+        return fresh == 0 ? mins : -1;
     }
 }
