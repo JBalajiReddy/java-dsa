@@ -1,65 +1,46 @@
 class Solution {
-    int m, n;
+    public void solve(char[][] b) {
+        int r = b.length, c = b[0].length;
 
-    public void solve(char[][] board) {
-        n = board.length;
-        m = board[0].length;
-
-        if (n == 0 || m == 0)
-            return;
-
-        //first-row
-        for (int i = 0; i < m; i++) {
-            if (board[0][i] == 'O') {
-                dfs(board, 0, i);
-            }
+        // Step 1: Scan top and bottom borders
+        for (int j = 0; j < c; j++) {
+            if (b[0][j] == 'O') dfs(b, 0, j);       // Top border
+            if (b[r - 1][j] == 'O') dfs(b, r - 1, j); // Bottom border
         }
 
-        //last-row
-        for (int i = 0; i < m; i++) {
-            if (board[n - 1][i] == 'O') {
-                dfs(board, n - 1, i);
-            }
+        // Step 2: Scan left and right borders
+        for (int i = 0; i < r; i++) {
+            if (b[i][0] == 'O') dfs(b, i, 0);       // Left border
+            if (b[i][c - 1] == 'O') dfs(b, i, c - 1); // Right border
         }
 
-        //first-column
-        for (int i = 0; i < n; i++) {
-            if (board[i][0] == 'O') {
-                dfs(board, i, 0);
-            }
-        }
-
-        //last-column
-        for (int i = 0; i < n; i++) {
-            if (board[i][m - 1] == 'O') {
-                dfs(board, i, m - 1);
-            }
-        }
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (board[i][j] == 'O')
-                    board[i][j] = 'X';
-            }
-        }
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (board[i][j] == 'V')
-                    board[i][j] = 'O';
+        // Step 3: Flip surrounded 'O's to 'X' and restore 'T's to 'O'
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                if (b[i][j] == 'O') {
+                    b[i][j] = 'X'; // Captured
+                } else if (b[i][j] == 'T') {
+                    b[i][j] = 'O'; // Safe
+                }
             }
         }
     }
 
     private void dfs(char[][] b, int i, int j) {
-        if (i < 0 || j < 0 || i >= n || j >= m || b[i][j] == 'V' || b[i][j] == 'X')
+        int r = b.length, c = b[0].length;
+        
+        // Base Cases: Out of bounds or not an unvisited 'O'
+        if (i < 0 || i >= r || j < 0 || j >= c || b[i][j] != 'O') {
             return;
+        }
 
-        b[i][j] = 'V';
+        // Mark as safe
+        b[i][j] = 'T';
 
-        dfs(b, i + 1, j);
-        dfs(b, i, j + 1);
-        dfs(b, i - 1, j);
-        dfs(b, i, j - 1);
+        // Explore all 4 cardinal directions
+        dfs(b, i, j + 1); // Right
+        dfs(b, i + 1, j); // Down
+        dfs(b, i, j - 1); // Left
+        dfs(b, i - 1, j); // Up
     }
 }
