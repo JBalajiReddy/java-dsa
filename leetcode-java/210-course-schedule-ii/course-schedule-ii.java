@@ -1,19 +1,14 @@
 class Solution {
     public int[] findOrder(int V, int[][] prerequisites) {
-        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
-        for (int i = 0; i < V; i++)
-            adj.add(new ArrayList<>());
-
-        //Apply - topological sort
-        //BFS - kahn's algo
         int[] inDegree = new int[V];
-        for (int p[] : prerequisites) {
-            int u = p[0];
-            int v = p[1];
-            adj.get(v).add(u);
-            inDegree[u]++;
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
         }
-
+        for (int[] p : prerequisites) {
+            adj.get(p[0]).add(p[1]);
+            inDegree[p[1]]++;
+        }
         Queue<Integer> q = new ArrayDeque<>();
         for (int i = 0; i < V; i++) {
             if (inDegree[i] == 0) {
@@ -21,20 +16,20 @@ class Solution {
             }
         }
 
-        
-        int cnt = 0;
+        int cnt = 0, idx = V - 1;
         int[] res = new int[V];
         while (!q.isEmpty()) {
             int node = q.poll();
-            res[cnt] = node;
+            res[idx--] = node;
             cnt++;
-
             for (int neigh : adj.get(node)) {
                 inDegree[neigh]--;
-                if (inDegree[neigh] == 0)
+                if (inDegree[neigh] == 0) {
                     q.offer(neigh);
+                }
             }
         }
-        return cnt == V ? res : new int[0];
+
+        return cnt == V ? res : new int[] {};
     }
 }
