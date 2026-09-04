@@ -1,5 +1,33 @@
 class Solution {
     public int trap(int[] height) {
+        int left = 0, right = height.length - 1;
+        int leftMax = 0, rightMax = 0;
+        int totalWater = 0;
+
+        while (left < right) {
+            if (height[left] < height[right]) {
+                if (height[left] >= leftMax) {
+                    leftMax = height[left]; // Update left max wall
+                } else {
+                    totalWater += leftMax - height[left]; // Water trapped at left
+                }
+                left++;
+            } else {
+                if (height[right] >= rightMax) {
+                    rightMax = height[right]; // Update right max wall
+                } else {
+                    totalWater += rightMax - height[right]; // Water trapped at right
+                }
+                right--;
+            }
+        }
+
+        return totalWater;
+    }
+}
+
+class Solution_PfxSuffix {
+    public int trap(int[] height) {
         int n = height.length;
         if (n == 0)
             return 0;
