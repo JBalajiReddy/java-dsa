@@ -1,24 +1,39 @@
 class Solution {
     public int trap(int[] height) {
-        int left = 0, right = height.length - 1;
-        int leftMax = 0, rightMax = 0;
+        // Initialize pointers at both ends of the array
+        int left = 0;
+        int right = height.length - 1;
+
+        // Track the maximum wall height encountered so far from each side
+        int leftMax = 0;
+        int rightMax = 0;
+
         int totalWater = 0;
 
+        // Move pointers towards each other until they meet
         while (left < right) {
+            // Key Insight: The amount of water trapped is always limited by the SHORTER boundary.
+            // If the left wall is shorter than the right wall, the left side determines the water level.
             if (height[left] < height[right]) {
                 if (height[left] >= leftMax) {
-                    leftMax = height[left]; // Update left max wall
+                    // Current bar is taller than any seen on the left; update left boundary (no water trapped here)
+                    leftMax = height[left];
                 } else {
-                    totalWater += leftMax - height[left]; // Water trapped at left
+                    // Current bar is shorter than leftMax. Because height[left] < height[right],
+                    // we are guaranteed that a wall at least as tall as leftMax exists to the right.
+                    totalWater += leftMax - height[left];
                 }
-                left++;
+                left++; // Move left pointer inward
             } else {
+                // Conversely, if the right wall is shorter or equal, the right side determines the water level.
                 if (height[right] >= rightMax) {
-                    rightMax = height[right]; // Update right max wall
+                    // Current bar is taller than any seen on the right; update right boundary
+                    rightMax = height[right];
                 } else {
-                    totalWater += rightMax - height[right]; // Water trapped at right
+                    // We are guaranteed that a wall at least as tall as rightMax exists to the left.
+                    totalWater += rightMax - height[right];
                 }
-                right--;
+                right--; // Move right pointer inward
             }
         }
 
