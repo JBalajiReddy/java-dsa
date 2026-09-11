@@ -1,54 +1,42 @@
 class Solution {
     public int totalNumbers(int[] digits) {
-        int[] count = new int[10]; 
-        for (int digit : digits) {
-            count[digit]++;
+        // Step 1: Count frequency of each digit (0-9)
+        int[] cnt = new int[10];
+        for (int d : digits) {
+            cnt[d]++;
         }
-        List<Integer> res = new ArrayList<>();
-        for (int i = 1; i < 10; i++) { 
-            if (count[i] > 0) {
-                count[i]--; 
-                for (int j = 0; j < 10; j++) { 
-                    if (count[j] > 0) {
-                        count[j]--; // Use this digit
-                        for (int k = 0; k < 10; k += 2) { 
-                            if (count[k] > 0) {
-                                int num = i * 100 + j * 10 + k;
-                                res.add(num);
-                            }
-                        }
-                        count[j]++; // Backtrack
-                    }
+
+        Set<Integer> set = new HashSet<>();
+
+        // Step 2: Form 3-digit numbers (i: hundreds, j: tens, k: units)
+        // First digit cannot be 0 (must be 1 to 9)
+        for (int i = 1; i <= 9; i++) {
+            if (cnt[i] == 0)
+                continue;
+            cnt[i]--; // Choose hundreds digit
+
+            // Second digit can be 0 to 9
+            for (int j = 0; j <= 9; j++) {
+                if (cnt[j] == 0)
+                    continue;
+                cnt[j]--; // Choose tens digit
+
+                // Third digit must be even (0, 2, 4, 6, 8)
+                for (int k = 0; k <= 8; k += 2) {
+                    if (cnt[k] == 0)
+                        continue;
+
+                    // Construct the 3-digit even number
+                    int num = i * 100 + j * 10 + k;
+                    set.add(num);
                 }
-                count[i]++; // Backtrack
+
+                cnt[j]++; // Backtrack tens digit
             }
+
+            cnt[i]++; // Backtrack hundreds digit
         }
-       
-        return res.size();
+
+        return set.size();
     }
 }
-
-
-// class Solution {
-//     public int totalNumbers(int[] digits) {
-//         int n = digits.length;
-//         Set<Integer> set = new HashSet<>();
-//         int num = 0;
-//         for (int i = 0; i < n; i++) {
-//             for (int j = 0; j < n; j++) {
-//                 if (i == j)
-//                     continue;
-//                 for (int k = 0; k < n; k++) {
-//                     if (i == k || j == k)
-//                         continue;
-//                     if (digits[k] % 2 == 0 && digits[i] != 0) {
-//                         num = digits[i] * 100 + digits[j] * 10 + digits[k];
-//                         set.add(num);
-//                     }
-//                 }
-//             }
-//         }
-
-//         return set.size();
-//     }
-// }
