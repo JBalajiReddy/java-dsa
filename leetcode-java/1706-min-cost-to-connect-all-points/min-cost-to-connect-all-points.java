@@ -1,3 +1,40 @@
+class Solution {
+    public int minCostConnectPoints(int[][] points) {
+        int n = points.length;
+        int[] minDist = new int[n];
+        boolean[] inMST = new boolean[n];
+
+        Arrays.fill(minDist, Integer.MAX_VALUE);
+        minDist[0] = 0; // Start at point 0
+
+        int res = 0;
+
+        for (int step = 0; step < n; step++) {
+            int u = -1;
+
+            // Pick the unvisited node with the smallest distance to the current tree
+            for (int i = 0; i < n; i++) {
+                if (!inMST[i] && (u == -1 || minDist[i] < minDist[u])) {
+                    u = i;
+                }
+            }
+
+            inMST[u] = true;
+            res += minDist[u];
+
+            // Update distances to adjacent unvisited nodes
+            for (int v = 0; v < n; v++) {
+                if (!inMST[v]) {
+                    int dist = Math.abs(points[u][0] - points[v][0]) + Math.abs(points[u][1] - points[v][1]);
+                    minDist[v] = Math.min(minDist[v], dist);
+                }
+            }
+        }
+
+        return res;
+    }
+}
+
 class DSU {
     private int[] parent;
     private int[] rank;
@@ -44,7 +81,7 @@ class DSU {
     }
 }
 
-class Solution {
+class Solution_Kruskals {
     public int minCostConnectPoints(int[][] points) {
         int n = points.length;
         DSU dsu = new DSU(n);
