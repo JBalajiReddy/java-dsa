@@ -1,28 +1,32 @@
 class Solution {
-    Map<String, PriorityQueue<String>> graph;
-    ArrayList<String> res;
-    int n;
     public List<String> findItinerary(List<List<String>> tickets) {
-        n = tickets.size();
-        graph = new HashMap<>();
-        for (List<String> ls : tickets) {
-            String start = ls.get(0);
-            String end = ls.get(1);
-            graph.putIfAbsent(start, new PriorityQueue<>());
-            graph.get(start).offer(end);
+        // Step 1: Build graph with PriorityQueue to ensure lexicographical order
+        Map<String, PriorityQueue<String>> adj = new HashMap<>();
+        for (List<String> ticket : tickets) {
+            adj.putIfAbsent(ticket.get(0), new PriorityQueue<>());
+            adj.get(ticket.get(0)).offer(ticket.get(1));
         }
-        res = new ArrayList<>();
-        dfs("JFK");
+
+        List<String> res = new ArrayList<>();
+        
+        // Step 2: Post-order Eulerian Path Traversal (Hierholzer's Algorithm)
+        dfs("JFK", res, adj);
+        
+        // Step 3: Reverse post-order result to get correct start-to-finish itinerary
         Collections.reverse(res);
         return res;
     }
 
-    private void dfs(String airport) {
-        PriorityQueue<String> des = graph.get(airport);
-        while (des != null && !des.isEmpty()) {
-            String next = des.poll();
-            dfs(next);
+    private void dfs(String node, List<String> res, Map<String, PriorityQueue<String>> adj) {
+        PriorityQueue<String> pq = adj.get(node);
+        
+        // Destructively consume edges in lexicographical order
+        while (pq != null && !pq.isEmpty()) {
+            String nextDestination = pq.poll(); // Consume ticket
+            dfs(nextDestination, res, adj);
         }
-        res.add(airport);
+        
+        // Post-Order Step: Add node after exploring all outgoing flights
+        res.add(node);
     }
 }
