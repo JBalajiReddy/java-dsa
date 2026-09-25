@@ -46,3 +46,38 @@ class Solution {
         return n * n; // Fallback return (unreachable under normal problem constraints)
     }
 }
+
+class Solution_BinarySearch_DFS {
+    private int n;
+    public int swimInWater(int[][] grid) {
+        n = grid.length;
+        int l = grid[0][0], h = n * n - 1, res = 0;
+        while (l <= h) {
+            boolean[][] vis = new boolean[n][n];
+            int mid = (l + h) / 2;
+            if (dfs(0, 0, mid, grid, vis)) {
+                res = mid;
+                h = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return res;
+    }
+
+    private boolean dfs(int i, int j, int mid, int[][] grid, boolean[][] vis) {
+        if (i >= n || i < 0 || j >= n || j < 0 || vis[i][j] == true || grid[i][j] > mid) {
+            return false;
+        }
+        vis[i][j] = true;
+        if (i == n - 1 && j == n - 1)
+            return true;
+        int[] dx = { -1, 0, 1, 0 };
+        int[] dy = { 0, 1, 0, -1 };
+        for (int idx = 0; idx < 4; idx++) {
+            if (dfs(dx[idx] + i, dy[idx] + j, mid, grid, vis))
+                return true;
+        }
+        return false;
+    }
+}
