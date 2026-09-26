@@ -57,3 +57,66 @@ class Solution {
         return 0; // Fallback return (unreachable in valid grids)
     }
 }
+
+class Solution_BinarySearch {
+    private int[][] dirs = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
+
+    public int minimumEffortPath(int[][] heights) {
+        int left = 0;
+        int right = 1000000; // Maximum possible height difference
+        int ans = right;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+
+            // Check if a path from (0,0) to (n-1, m-1) exists with effort <= mid
+            if (canReachDestination(heights, mid)) {
+                ans = mid;
+                right = mid - 1; // Try finding a smaller effort
+            } else {
+                left = mid + 1; // Increase effort limit
+            }
+        }
+
+        return ans;
+    }
+
+    // BFS feasibility check
+    private boolean canReachDestination(int[][] heights, int maxEffort) {
+        int n = heights.length;
+        int m = heights[0].length;
+        boolean[][] vis = new boolean[n][m];
+
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[] { 0, 0 });
+        vis[0][0] = true;
+
+        while (!queue.isEmpty()) {
+            int[] curr = queue.poll();
+            int r = curr[0], c = curr[1];
+
+            // Reached bottom-right corner
+            if (r == n - 1 && c == m - 1) {
+                return true;
+            }
+
+            for (int[] d : dirs) {
+                int nR = r + d[0];
+                int nC = c + d[1];
+
+                // Check bounds and whether neighbor is unvisited
+                if (nR >= 0 && nR < n && nC >= 0 && nC < m && !vis[nR][nC]) {
+                    int currentStepEffort = Math.abs(heights[r][c] - heights[nR][nC]);
+
+                    // Only traverse if the step effort is within our target threshold
+                    if (currentStepEffort <= maxEffort) {
+                        vis[nR][nC] = true;
+                        queue.offer(new int[] { nR, nC });
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+}
