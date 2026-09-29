@@ -80,3 +80,60 @@ class Solution {
         return (idx == k) ? res : new int[0];
     }
 }
+
+class Solution_Kahn_TopoSort {
+    public int[][] buildMatrix(int k, int[][] rowConditions, int[][] colConditions) {
+        int[] rowOrder = topoSort(rowConditions, k);
+        int[] colOrder = topoSort(colConditions, k);
+        if (rowOrder.length == 0 || colOrder.length == 0) {
+            return new int[0][0];
+        }
+
+        int[][] matrix = new int[k][k];
+        for (int i = 0; i < k; i++) {
+            for (int j = 0; j < k; j++) {
+                if (rowOrder[i] == colOrder[j]) {
+                    matrix[i][j] = rowOrder[i];
+                }
+            }
+        }
+        return matrix;
+    }
+
+    private int[] topoSort(int[][] edges, int k) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i <= k; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        int[] inDegree = new int[k + 1];
+        for (int[] e : edges) {
+            adj.get(e[0]).add(e[1]);
+            inDegree[e[1]]++;
+        }
+
+        Queue<Integer> q = new LinkedList<>();
+
+        for (int i = 1; i <= k; i++) {
+            if (inDegree[i] == 0) {
+                q.offer(i);
+            }
+        }
+
+        int[] res = new int[k + 1];
+        int idx = 0;
+
+        while (!q.isEmpty()) {
+            int n = q.poll();
+            res[idx++] = n;
+
+            for (int neigh : adj.get(n)) {
+                if (--inDegree[neigh] == 0) {
+                    q.offer(neigh);
+                }
+            }
+        }
+
+        return (idx == k) ? res : new int[0];
+    }
+}
