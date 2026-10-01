@@ -1,61 +1,37 @@
-//BOTTOM UP
-
 class Solution {
     public int rob(int[] nums) {
         int n = nums.length;
-        int pre1 = nums[0];
-        int pre2 = 0;
-        for (int i = 1; i < n; i++) {
-            int pick = nums[i] + (i > 1 ? pre2 : 0);
-
-            int noPick = pre1;
-            int curr = Math.max(pick, noPick);
-
-            pre2 = pre1;
-            pre1 = curr;
+        if (n == 1) {
+            return nums[0];
         }
-        return pre1;
+        int[] dp = new int[n + 1];
+        dp[0] = nums[0];
+        dp[1] = Math.max(nums[0], nums[1]);
+        for (int i = 2; i < n; i++) {
+            dp[i] = Math.max(dp[i - 1], nums[i] + dp[i - 2]);
+        }
+        return dp[n - 1];
     }
 }
 
+//recursive + memo (top - down)
+class Solution_Memo {
+    private int[] memo;
+    public int rob(int[] nums) {
+        memo = new int[nums.length + 1];
+        Arrays.fill(memo, -1);
+        return robHouse(nums, nums.length - 1);
+    }
 
-// class Solution {
-//     public int rob(int[] nums) {
-//         int n = nums.length;
-//         int[] dp = new int[n + 1];
-//         dp[0] = nums[0];
-//         for (int i = 1; i < n; i++) {
-//             int pick = nums[i] + (i > 1 ? dp[i - 2] : 0);
-//             // if (i > 1)
-//             //     pick += dp[i - 2];
-
-//             int noPick = dp[i - 1];
-//             dp[i] = Math.max(pick, noPick);
-//         }
-//         return dp[n - 1];
-//     }
-// }
-
-
-//TOP - DOWN
-
-// class Solution {
-//     public int rob(int[] nums) {
-//         int n = nums.length;
-//         int[] dp = new int[n + 1];
-//         Arrays.fill(dp, - 1);
-//         return solve(dp, nums, n - 1);
-//     }
-
-//     private int solve(int[] dp, int[] n, int i) {
-//         if (i == 0) return n[i];
-//         if (i < 0) return 0;
-//         if (dp[i] != -1) return dp[i];
-
-//         int pick = n[i] + solve(dp, n, i - 2);
-//         int noPick = solve(dp, n, i - 1);
-//         dp[i] = Math.max(pick, noPick);
-
-//         return dp[i];
-//     }
-// }
+    public int robHouse(int[] nums, int i) {
+        if (i < 0)
+            return 0;
+        if (memo[i] >= 0)
+            return memo[i];
+        //skip : robHouse(i - 1)
+        //rob : robHouse(i - 2) + nums[i]
+        int res = Math.max(robHouse(nums, i - 2) + nums[i], robHouse(nums, i - 1));
+        memo[i] = res;
+        return res;
+    }
+}
