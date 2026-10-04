@@ -1,27 +1,37 @@
 class Solution {
     public boolean checkValidString(String s) {
-        int min = 0, max = 0;
-
-        for (int i = 0; i < s.length(); i++) {
+        int n = s.length();
+        int open = 0, close = 0;
+        for (int i = 0; i < n; i++) {
             char ch = s.charAt(i);
-
-            if (ch == '(') {
-                min++;
-                max++;
-            } else if (ch == ')') {
-                min--;
-                max--;
+            if (ch == '(' || ch == '*') {
+                open++;
             } else {
-                min--; // '*' as ) or empty
-                max++; // '*' as (
+                close++;
             }
 
-            if (min < 0)
-                min = 0;
-
-            if (max < 0)
+            if (close > open) {
                 return false;
+            }
         }
-        return min == 0;
+
+        boolean front = (open >= close);
+        open = 0;
+        close = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            char ch = s.charAt(i);
+            if (ch == ')' || ch == '*') {
+                close++;
+            } else {
+                open++;
+            }
+
+            if (open > close) {
+                return false;
+            }
+        }
+
+        boolean back = (open <= close);
+        return front && back;
     }
 }
