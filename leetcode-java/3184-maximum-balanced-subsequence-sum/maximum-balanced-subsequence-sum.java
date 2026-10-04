@@ -46,28 +46,26 @@ class Solution_LIS_TopDown_TLE {
     }
 }
 
-
-
 //Approach-2 (Using LIS Bottom Up) - TLE (341/345 Test cases passed)
 //Time : O(n^2)
 class Solution_LIS_BOttomUP_TLE {
     public long maxBalancedSubsequenceSum(int[] nums) {
         int n = nums.length;
-        
+
         int maxEl = Arrays.stream(nums).max().getAsInt();
-        if(maxEl <= 0) {
+        if (maxEl <= 0) {
             return maxEl;
         }
 
         long[] t = new long[n];
-        for(int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             t[i] = nums[i];
         }
 
         long maxSum = Integer.MIN_VALUE;
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < i; j++) {
-                if(nums[i] - i >= nums[j] - j) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] - i >= nums[j] - j) {
                     t[i] = Math.max(t[i], t[j] + nums[i]);
                     maxSum = Math.max(maxSum, t[i]);
                 }
@@ -78,19 +76,18 @@ class Solution_LIS_BOttomUP_TLE {
     }
 }
 
-
 // Approach-3 (Using Optimal LIS - Similar to Patience Sorting) - Accepted
 // Time Complexity  : O(n log n)
 // Space Complexity : O(n)
 class Solution {
     public long maxBalancedSubsequenceSum(int[] nums) {
         int n = nums.length;
-        
+
         // Transform condition: nums[i] - i >= nums[j] - j  =>  arr[i] >= arr[j].
         // This converts the problem into finding a non-decreasing subsequence on 'arr'.
-        int [] arr = new int[n];
-        for(int i = 0; i<n; i++){
-            arr[i] = nums[i]-i;
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = nums[i] - i;
         }
 
         // Stores map entries of (arr[i] -> max_subsequence_sum_ending_here).
@@ -98,31 +95,30 @@ class Solution {
         TreeMap<Integer, Long> map = new TreeMap<>();
         long ans = Integer.MIN_VALUE;
 
-        for(int i = 0; i<n; i++){
+        for (int i = 0; i < n; i++) {
             // If element is non-positive, it won't help extend any positive subsequence.
             // We only consider it on its own (for cases where all elements in 'nums' are <= 0).
-            if(nums[i]<=0){
+            if (nums[i] <= 0) {
                 ans = Math.max(ans, nums[i]);
-            }
-            else{
+            } else {
                 long temp = nums[i];
 
                 // Query the best predecessor: find the largest key <= arr[i].
                 // If it exists, add its stored maximum sum to our current element.
-                if(map.floorKey(arr[i])!=null){
+                if (map.floorKey(arr[i]) != null) {
                     temp += map.get(map.floorKey(arr[i]));
                 }
 
                 // Prune dominated entries:
                 // Remove any entry with key >= arr[i] that has a smaller sum than 'temp',
                 // because (arr[i], temp) is strictly better (easier threshold + larger sum).
-                while(map.ceilingKey(arr[i])!=null && map.get(map.ceilingKey(arr[i]))<temp){
+                while (map.ceilingKey(arr[i]) != null && map.get(map.ceilingKey(arr[i])) < temp) {
                     map.remove(map.ceilingKey(arr[i]));
                 }
 
                 // Insert into the map only if this new sum 'temp' improves upon 
                 // the sum of the nearest existing smaller key (floorKey).
-                if(map.floorKey(arr[i])==null || map.get(map.floorKey(arr[i]))<temp){
+                if (map.floorKey(arr[i]) == null || map.get(map.floorKey(arr[i])) < temp) {
                     map.put(arr[i], temp);
                 }
 
