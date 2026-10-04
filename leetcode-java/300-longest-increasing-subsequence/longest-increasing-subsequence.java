@@ -1,118 +1,113 @@
 class Solution {
     public int lengthOfLIS(int[] nums) {
-        List<Integer> ls = new ArrayList<>();
-        for (int num : nums) {
-            int idx = Collections.binarySearch(ls, num);
-            if (idx < 0) { //ele not found
-                idx = -(idx + 1); //insertion point
+        int[] tails = new int[nums.length];
+        int size = 0; // Length of the longest increasing subsequence found so far
+
+        for (int x : nums) {
+            // Binary search for 'x' in the active tails array
+            int i = Arrays.binarySearch(tails, 0, size, x);
+            
+            // If x is not found, binarySearch returns -(insertion_point) - 1
+            if (i < 0) {
+                i = -(i + 1);
             }
 
-            if (idx == ls.size()) {
-                ls.add(num); //add at last
-            } else {
-                ls.set(idx, num);
+            // Replace or append 'x' at index 'i'
+            tails[i] = x;
+
+            // If x was placed at the end, the LIS length increases
+            if (i == size) {
+                size++;
             }
         }
-        return ls.size();
+
+        return size;
     }
 }
 
-// class Solution {
-//     /**
-//      * Calculates the length of the Longest Increasing Subsequence (LIS)
-//      * by finding the Longest Common Subsequence (LCS) between the original
-//      * array and a sorted, unique version of it.
-//      */
-//     public int lengthOfLIS(int[] nums) {
-//         if (nums == null || nums.length == 0) {
-//             return 0;
-//         }
+class SolutionLIS_TreeMap {
+    public int lengthOfLIS(int[] nums) {
+        // Map stores: (element_value -> max_LIS_length_ending_at_this_value)
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+        int maxLen = 0;
 
-//         // Step 1: Create a sorted array of the unique elements from `nums`.
-//         // A TreeSet is perfect for this as it stores unique elements in ascending order.
-//         Set<Integer> uniqueSortedSet = new TreeSet<>();
-//         for (int num : nums) {
-//             uniqueSortedSet.add(num);
-//         }
+        for (int x : nums) {
+            // Find the largest key strictly smaller than 'x' (for strictly increasing)
+            Integer prevKey = map.lowerKey(x);
+            int len = (prevKey != null ? map.get(prevKey) : 0) + 1;
 
-//         // Convert the Set to an array to allow for indexed access.
-//         int[] sortedUniqueNums = new int[uniqueSortedSet.size()];
-//         int i = 0;
-//         for (Integer num : uniqueSortedSet) {
-//             sortedUniqueNums[i++] = num;
-//         }
+            // Prune entries: remove keys >= x that offer length <= len
+            while (map.ceilingKey(x) != null && map.get(map.ceilingKey(x)) <= len) {
+                map.remove(map.ceilingKey(x));
+            }
 
-//         // Step 2: Find the length of the LCS between the original array
-//         // and the new sorted, unique array.
-//         return findLCSLength(nums, sortedUniqueNums);
-//     }
+            // Insert into map if it improves upon lower keys
+            if (prevKey == null || map.get(prevKey) < len) {
+                map.put(x, len);
+            }
 
-//     /**
-//      * A standard dynamic programming function to find the length of the LCS
-//      * between two arrays.
-//      */
-//     private int findLCSLength(int[] arr1, int[] arr2) {
-//         int n = arr1.length;
-//         int m = arr2.length;
+            maxLen = Math.max(maxLen, len);
+        }
 
-//         // dp[i][j] stores the length of the LCS of arr1[0...i-1] and arr2[0...j-1].
-//         int[][] dp = new int[n + 1][m + 1];
+        return maxLen;
+    }
+}
 
-//         // Build the DP table in a bottom-up manner.
-//         for (int i = 1; i <= n; i++) {
-//             for (int j = 1; j <= m; j++) {
-//                 // If the current characters match, they are part of the common subsequence.
-//                 if (arr1[i - 1] == arr2[j - 1]) {
-//                     dp[i][j] = 1 + dp[i - 1][j - 1];
-//                 } else {
-//                     // If they don't match, take the maximum from the previous states.
-//                     dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-//                 }
-//             }
-//         }
+class Solution_BottomUP {
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        if (n == 0) return 0;
 
-//         // The length of the LCS is in the bottom-right cell of the DP table.
-//         return dp[n][m];
-//     }
-// }
+        // dp[i] = length of LIS ending strictly at index i
+        int[] dp = new int[n];
+        
+        // Base case: Each element by itself is an LIS of length 1
+        Arrays.fill(dp, 1);
 
-// class Solution {
-//     public int lengthOfLIS(int[] nums) {
-//         int n = nums.length;
-//         if (n == 0) return 0;
-//         int[][] memo = new int[n][n];
-//         for (int[] row : memo) {
-//             Arrays.fill(row, -1);
-//         }
-//         return f(0, 0, nums, memo);
-//     }
+        int maxLIS = 1;
 
-//     private int f(int index, int prev_index, int[] nums, int[][] memo) {
-//         if (index == nums.length) {
-//             return 0;
-//         }
+        // Outer loop: Try to find LIS ending at index i
+        for (int i = 1; i < n; i++) {
+            // Inner loop: Look at all previous elements j < i
+            for (int j = 0; j < i; j++) {
+                // If nums[i] can extend the sequence ending at nums[j]
+                if (nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[i], 1 + dp[j]);
+                }
+            }
+            // Track the global maximum length seen so far
+            maxLIS = Math.max(maxLIS, dp[i]);
+        }
 
-//         if (memo[index][prev_index] != -1) {
-//             return memo[index][prev_index];
-//         }
+        return maxLIS;
+    }
+}
 
-//         if (prev_index < index) {
-//             int take = 0;
-//             if (nums[index] > nums[prev_index]) {
-//                 take = 1 + f(index + 1, index, nums, memo);
-//             }
-//             int notTake = f(index + 1, prev_index, nums, memo);
-//             return memo[index][prev_index] = Math.max(take, notTake);
-//         } 
+class Solution_TopDown {
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        int[][] memo = new int[n][n + 1]; //col: 0 -> n - 1; prev: -1 -> n - 1
+        for (int[] m : memo) {
+            Arrays.fill(m, -1);
+        }
 
-//         else {
-//             // Option A: Start a new subsequence by taking nums[index].
-//             int startHere = 1 + f(index + 1, index, nums, memo);
-//             // Option B: Skip starting here and try to start from the next index.
-//             int startLater = f(index + 1, index + 1, nums, memo);
-//             return memo[index][prev_index] = Math.max(startHere, startLater);
-//         }
-//     }
-// }
+        return recur(nums, memo, 0, -1);
+    }
 
-// Another approach which I found to be intuitive: We can store the elements of the array without duplicates in increasing order (Can be easily done with the help of TreeSet in java or set in cpp). Then again store these elements in a new array and find the LCS of the original array and the newly computed array. The LCS of these 2 arrays will be the LIS. For printing the LIS, we can use the same approach used for printing LCS.
+    private int recur(int[] nums, int[][] memo, int curr, int prev) {
+        if (curr >= nums.length) {
+            return 0;
+        }
+
+        if (memo[curr][prev + 1] != -1) {
+            return memo[curr][prev + 1];
+        }
+
+        int skip = recur(nums, memo, curr + 1, prev);
+        int take = 0;
+        if (prev == -1 || nums[curr] > nums[prev]) {
+            take = 1 + recur(nums, memo, curr + 1, curr);
+        }
+        return memo[curr][prev + 1] = Math.max(skip, take);
+    }
+}
