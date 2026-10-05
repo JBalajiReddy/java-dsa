@@ -1,20 +1,32 @@
 class Solution {
-
     public int[] maxSubsequence(int[] nums, int k) {
-        int n = nums.length;
-        int[][] vals = new int[n][2]; // two-dimensional array stores index and value
-        for (int i = 0; i < n; ++i) {
-            vals[i][0] = i; // store index
-            vals[i][1] = nums[i]; // store value
+        // Min-Heap ordered by value: (value, index)
+        PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> Integer.compare(a[0], b[0]));
+
+        // Step 1: Maintain the top k largest elements using a Min-Heap
+        for (int i = 0; i < nums.length; i++) {
+            minHeap.offer(new int[]{nums[i], i});
+            if (minHeap.size() > k) {
+                minHeap.poll(); // Remove smallest element
+            }
         }
-        // sort by numerical value in descending order
-        Arrays.sort(vals, (x1, x2) -> Integer.compare(x2[1], x1[1]));
-        // select the first k elements and sort them in ascending order by index
-        Arrays.sort(vals, 0, k, (x1, x2) -> Integer.compare(x1[0], x2[0]));
-        int[] res = new int[k]; // target subsequence
-        for (int i = 0; i < k; ++i) {
-            res[i] = vals[i][1];
+
+        // Step 2: Extract the k elements and sort them by original index
+        int[][] kLargest = new int[k][2];
+        int idx = 0;
+        while (!minHeap.isEmpty()) {
+            kLargest[idx++] = minHeap.poll();
         }
-        return res;
+
+        // Sort by index (element[1]) to restore original relative order
+        Arrays.sort(kLargest, (a, b) -> Integer.compare(a[1], b[1]));
+
+        // Step 3: Build output array containing the values
+        int[] result = new int[k];
+        for (int i = 0; i < k; i++) {
+            result[i] = kLargest[i][0];
+        }
+
+        return result;
     }
 }
