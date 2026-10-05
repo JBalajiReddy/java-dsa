@@ -1,3 +1,62 @@
+/**
+To solve this problem, we transform the given condition into a Maximum Sum Increasing Subsequence problem by defining a new key array where each element equals its value minus its index. The condition that a subsequence is balanced simplifies algebraically to checking that this new key is greater than or equal to the key of the preceding element in the sequence. We then iterate through the array, using a TreeMap to dynamically maintain each unique key alongside the maximum valid subsequence sum ending at that key. For every positive number, we use the map's floor query to instantly find and extend the largest compatible sum from previous indices in logarithmic time. Finally, after recording the new max sum for the current key, we prune any larger keys from the map that yield smaller or equal sums, keeping our lookup structure optimal and strictly monotonic.
+*/
+
+class Solution {
+    public long maxBalancedSubsequenceSum(int[] nums) {
+        int n = nums.length;
+        
+        // Track the global maximum single element (handles all-negative arrays)
+        long maxVal = Long.MIN_VALUE;
+        for (int num : nums) {
+            maxVal = Math.max(maxVal, num);
+        }
+        
+        // If all numbers are negative or zero, the best sum is the single largest element
+        if (maxVal <= 0) {
+            return maxVal;
+        }
+
+        // TreeMap maps: arr[i] (nums[i] - i) -> max balanced sum ending with key arr[i]
+        TreeMap<Integer, Long> map = new TreeMap<>();
+        long ans = maxVal;
+
+        for (int i = 0; i < n; i++) {
+            // Skip non-positive elements as they never increase a positive subsequence sum
+            if (nums[i] <= 0) {
+                continue;
+            }
+
+            int key = nums[i] - i;
+            long currentSum = nums[i];
+
+            // Look for the largest sum among past elements with key <= current key
+            Map.Entry<Integer, Long> floor = map.floorEntry(key);
+            if (floor != null) {
+                currentSum += floor.getValue();
+            }
+
+            // Maintain monotonicity: remove redundant future entries (key >= current key) 
+            // that have a smaller or equal sum
+            Map.Entry<Integer, Long> ceiling = map.ceilingEntry(key);
+            while (ceiling != null && ceiling.getValue() <= currentSum) {
+                map.remove(ceiling.getKey());
+                ceiling = map.ceilingEntry(key);
+            }
+
+            // Only insert if it improves upon any existing floor entry
+            if (floor == null || floor.getValue() < currentSum) {
+                map.put(key, currentSum);
+            }
+
+            ans = Math.max(ans, currentSum);
+        }
+
+        return ans;
+    }
+}
+
+
 //Approach-1 (Using LIS) - Recursion (TLE) ---> 316 / 345 testcases passed
 //T.C : O(n^2) - prev index for every i
 class Solution_LIS_TopDown_TLE {
@@ -79,7 +138,7 @@ class Solution_LIS_BOttomUP_TLE {
 // Approach-3 (Using Optimal LIS - Similar to Patience Sorting) - Accepted
 // Time Complexity  : O(n log n)
 // Space Complexity : O(n)
-class Solution {
+class Solution_DP_MonotonicMap {
     public long maxBalancedSubsequenceSum(int[] nums) {
         int n = nums.length;
 
