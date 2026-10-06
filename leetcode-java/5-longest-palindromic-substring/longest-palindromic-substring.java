@@ -37,3 +37,44 @@ class Solution {
         return right - left - 1;
     }
 }
+
+class Solution_BottomUp {
+    public String longestPalindrome(String s) {
+        int n = s.length();
+        if (n <= 1)
+            return s;
+
+        // dp[i][j] tracks if s[i..j] is a valid palindrome
+        boolean[][] dp = new boolean[n][n];
+        int maxLen = 1, startIdx = 0; // Initialize startIdx to 0 for length 1 defaults
+
+        // Outer loop: Iterate by substring length
+        for (int len = 1; len <= n; len++) {
+            for (int i = 0; i + len <= n; i++) {
+                int j = i + len - 1; // Ending index of substring s[i..j]
+
+                // Length 1: Always a palindrome
+                if (i == j) {
+                    dp[i][j] = true;
+                }
+                // Length 2: Palindrome if boundary characters match
+                else if (i + 1 == j) {
+                    dp[i][j] = (s.charAt(i) == s.charAt(j));
+                }
+                // Length >= 3: Palindrome if boundary chars match AND inner substring s[i+1..j-1] is a palindrome
+                else {
+                    dp[i][j] = (s.charAt(i) == s.charAt(j) && dp[i + 1][j - 1]);
+                }
+
+                // IMPORTANT: Update maxLen and startIdx ONLY IF dp[i][j] is true
+                if (dp[i][j] && len > maxLen) {
+                    maxLen = len;
+                    startIdx = i;
+                }
+            }
+        }
+
+        // Java substring requires (start, end_exclusive) -> startIdx + maxLen
+        return s.substring(startIdx, startIdx + maxLen);
+    }
+}
