@@ -1,18 +1,23 @@
 class Solution {
     public int minInsertions(String s) {
         int n = s.length();
-        StringBuilder str = new StringBuilder(s);
-        String rs = str.reverse().toString();
-        int[][] dp = new int[n + 1][n + 1];
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= n; j++) {
-                if (s.charAt(i - 1) == rs.charAt(j - 1)) {
-                    dp[i][j] = 1 + dp[i - 1][j - 1];
+        int[][] dp = new int[n][n]; //min insertions to make s[i..j] palindrome
+
+        //length based tabulation pattern for strings
+        for (int len = 1; len <= n; len++) {
+            for (int i = 0; i + len <= n; i++) {
+                int j = i + len - 1;
+                if (len == 1) {
+                    dp[i][j] = 0; //mp insertions, already palindrome
+                    continue;
+                } else if (s.charAt(i) == s.charAt(j)) {
+                    dp[i][j] = dp[i + 1][j - 1];
                 } else {
-                    dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j]);
+                    dp[i][j] = 1 + Math.min(dp[i + 1][j], dp[i][j - 1]);
                 }
             }
         }
-        return n - dp[n][n];
+
+        return dp[0][n - 1];
     }
 }
