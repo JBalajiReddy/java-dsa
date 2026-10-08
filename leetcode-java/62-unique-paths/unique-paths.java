@@ -1,4 +1,4 @@
-class Solution_2D {
+class Solution {
     public int uniquePaths(int n, int m) {
         int[][] dp = new int[n][m]; //tracks no of unique paths to reach (i, j) from (0, 0)
         for (int row = 0; row < n; row++) {
@@ -17,7 +17,7 @@ class Solution_2D {
     }
 }
 
-class Solution {
+class Solution1 {
     /**
      * Space-Optimized Solution for Unique Paths (LeetCode 62)
      * 
