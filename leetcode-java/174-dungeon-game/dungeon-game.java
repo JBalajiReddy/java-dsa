@@ -1,6 +1,7 @@
 class Solution {
     public int calculateMinimumHP(int[][] dungeon) {
         int n = dungeon.length, m = dungeon[0].length;
+        // Represents the minimum health required right before entering cell (i, j) so that the knight can successfully reach the princess at cell (n-1, m-1) while keeping health strictly above 0 (>= 1) at every single step.
         int[][] dp = new int[n + 1][m + 1];
 
         // Iterate backwards from the destination cell (n-1, m-1) to the starting cell (0, 0)
@@ -37,6 +38,7 @@ class Solution_TopDown {
         int n = dungeon.length, m = dungeon[0].length;
         
         // Memoization table initialized to -1
+        // Definition: Caches the return value of recur(i, j), which represents the minimum health required right before entering cell (i, j) to reach the destination (n-1, m-1) alive.
         int[][] memo = new int[n + 1][m + 1];
         for (int i = 0; i <= n; i++) {
             Arrays.fill(memo[i], -1);
