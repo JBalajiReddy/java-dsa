@@ -6,16 +6,13 @@ class Solution {
         }
 
         int[][] dp = new int[n][m]; //min path sum/cost till (i, j) from (0, 0)
-        int runningSum = 0;
-        for (int row = 0; row < n; row++) {
-            runningSum += grid[row][0];
-            dp[row][0] = runningSum;
+        dp[0][0]= grid[0][0];
+        for (int row = 1; row < n; row++) {
+            dp[row][0] = dp[row - 1][0] + grid[row][0];
         }
 
-        runningSum = 0;
-        for (int col = 0; col < m; col++) {
-            runningSum += grid[0][col];
-            dp[0][col] = runningSum;
+        for (int col = 1; col < m; col++) {
+            dp[0][col] = dp[0][col - 1] + grid[0][col];
         }
 
         for (int i = 1; i < n; i++) {
