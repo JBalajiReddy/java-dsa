@@ -1,4 +1,56 @@
 class Solution {
+    public int maxProductPath(int[][] grid) {
+        int n = grid.length;
+        int m = grid[0].length;
+        int MOD = 1_000_000_007;
+
+        // Tracks maximum and minimum path products to reach cell (i, j)
+        long[][] maxDp = new long[n][m];
+        long[][] minDp = new long[n][m];
+
+        // Base Case: Origin cell (0, 0)
+        maxDp[0][0] = grid[0][0];
+        minDp[0][0] = grid[0][0];
+
+        // Base Case: First Column (can only move Down from cell above)
+        for (int i = 1; i < n; i++) {
+            maxDp[i][0] = maxDp[i - 1][0] * grid[i][0];
+            minDp[i][0] = minDp[i - 1][0] * grid[i][0];
+        }
+
+        // Base Case: First Row (can only move Right from cell to left)
+        for (int j = 1; j < m; j++) {
+            maxDp[0][j] = maxDp[0][j - 1] * grid[0][j];
+            minDp[0][j] = minDp[0][j - 1] * grid[0][j];
+        }
+
+        // Fill remaining inner cells
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j < m; j++) {
+                long curr = grid[i][j];
+
+                // Potential products coming from the TOP neighbor (i-1, j)
+                long top1 = maxDp[i - 1][j] * curr;
+                long top2 = minDp[i - 1][j] * curr;
+
+                // Potential products coming from the LEFT neighbor (i, j-1)
+                long left1 = maxDp[i][j - 1] * curr;
+                long left2 = minDp[i][j - 1] * curr;
+
+                // Find the new max and min among all 4 candidate products
+                maxDp[i][j] = Math.max(Math.max(top1, top2), Math.max(left1, left2));
+                minDp[i][j] = Math.min(Math.min(top1, top2), Math.min(left1, left2));
+            }
+        }
+
+        long maxResult = maxDp[n - 1][m - 1];
+
+        // Return maxResult % MOD if non-negative, else -1
+        return maxResult >= 0 ? (int) (maxResult % MOD) : -1;
+    }
+}
+
+class Solution_UsingPairObject {
 
     class Pair {
         long maxVal;
@@ -51,7 +103,7 @@ class Solution {
 
         long res = dp[n - 1][m - 1].maxVal % MOD;
 
-        return res >= 0 ? (int) res % MOD : -1;
+        return res >= 0 ? (int) res % MOD : -1; //Perform modulo on `long` first, then cast to `int`
     }
 }
 
