@@ -1,4 +1,4 @@
-class Solution {
+class Solution_BottomUp {
     public boolean canPartition(int[] nums) {
         int sum = Arrays.stream(nums).sum();
         if ((sum & 1) != 0) {
@@ -28,5 +28,34 @@ class Solution {
             }
         }
         return dp[n][target];
+    }
+}
+
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int sum = Arrays.stream(nums).sum();
+        if ((sum & 1) != 0) {
+            return false;
+        }
+
+        int target = sum / 2;
+        int n = nums.length;
+        boolean[] prev = new boolean[target + 1]; //tracks if n elements sum up to target sum
+
+        prev[0] = true;
+
+        for (int i = 1; i <= n; i++) {
+            boolean[] curr = new boolean[target + 1];
+            for (int j = 1; j <= target; j++) {
+                boolean skip = prev[j];
+                boolean take = false;
+                if (nums[i - 1] <= j) {
+                    take = prev[j - nums[i - 1]];
+                }
+                curr[j] = skip || take;
+            }
+            prev = curr;
+        }
+        return prev[target];
     }
 }
