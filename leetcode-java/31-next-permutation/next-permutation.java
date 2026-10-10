@@ -1,26 +1,44 @@
 class Solution {
     public void nextPermutation(int[] nums) {
-        int i = nums.length - 2;
-        int j = nums.length - 1;
+        int n = nums.length;
+        int golaIdx = -1;
 
-        while (i >= 0 && nums[i] >= nums[i + 1])
-            i--;
-        if (i >= 0) {
-            while (nums[j] <= nums[i])
-                j--; //find j-th idx from right that's greater than i-th element
-            swap(nums, i, j);
+        // Find the pivot: the first index from the right
+        // where nums[i - 1] < nums[i].
+        for (int i = n - 1; i > 0; i--) {
+            if (nums[i - 1] < nums[i]) {
+                golaIdx = i - 1;
+                break;
+            }
         }
-        reverse(nums, i + 1, nums.length - 1);
+
+        if (golaIdx != -1) {
+            int swapIdx = n - 1;
+
+            // Find the smallest number greater than the pivot
+            // by searching from the right.
+            while (nums[swapIdx] <= nums[golaIdx]) {
+                swapIdx--;
+            }
+
+            swap(nums, golaIdx, swapIdx);
+        }
+
+        // Reverse the suffix. This also handles the fully descending case.
+        reverse(nums, golaIdx + 1, n - 1);
     }
 
-    public void swap(int[] n, int i, int j) {
-        int temp = n[i];
-        n[i] = n[j];
-        n[j] = temp;
+    private void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
     }
 
-    public void reverse(int[] n, int i, int j) {
-        while (i < j)
-            swap(n, i++, j--);
+    private void reverse(int[] nums, int st, int ed) {
+        while (st < ed) {
+            swap(nums, st, ed);
+            st++;
+            ed--;
+        }
     }
 }
