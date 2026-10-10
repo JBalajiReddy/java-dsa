@@ -30,3 +30,53 @@ class Solution {
         return maxArea;
     }
 }
+
+
+class Solution1 {
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        int[] prevSmaller = new int[n];
+        int[] nextSmaller = new int[n];
+        Stack<Integer> stack = new Stack<>();
+
+        // Find the previous strictly smaller element's index.
+        Arrays.fill(prevSmaller, -1);
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && heights[stack.peek()] >= heights[i]) {
+                stack.pop();
+            }
+
+            if (!stack.isEmpty()) {
+                prevSmaller[i] = stack.peek();
+            }
+
+            stack.push(i);
+        }
+
+        stack.clear();
+
+        // Find the next strictly smaller element's index.
+        Arrays.fill(nextSmaller, n);
+        for (int i = n - 1; i >= 0; i--) {
+            while (!stack.isEmpty() && heights[stack.peek()] >= heights[i]) {
+                stack.pop();
+            }
+
+            if (!stack.isEmpty()) {
+                nextSmaller[i] = stack.peek();
+            }
+
+            stack.push(i);
+        }
+
+        // Use the smaller-element boundaries to calculate each bar's area.
+        int maxArea = 0;
+        for (int i = 0; i < n; i++) {
+            int width = nextSmaller[i] - prevSmaller[i] - 1;
+            int area = heights[i] * width;
+            maxArea = Math.max(maxArea, area);
+        }
+
+        return maxArea;
+    }
+}
