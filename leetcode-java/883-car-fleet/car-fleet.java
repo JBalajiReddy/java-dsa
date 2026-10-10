@@ -22,8 +22,6 @@ class Solution {
         // Process remaining cars from right to left (closest to target first)
         for (int i = n - 2; i >= 0; i--) {
             int idx = indices[i];
-            
-            // Fix: Use speed[idx] instead of speed[pos]!
             double time = (double) (target - position[idx]) / speed[idx];
 
             // If a car behind takes STRICTLY MORE time, it can never catch up -> NEW FLEET!
