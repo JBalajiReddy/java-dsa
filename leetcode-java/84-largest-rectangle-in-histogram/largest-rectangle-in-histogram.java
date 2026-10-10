@@ -1,17 +1,32 @@
 class Solution {
     public int largestRectangleArea(int[] heights) {
-        Stack<Integer> st = new Stack<>();
+        Stack<Integer> stack = new Stack<>();
         int n = heights.length;
-        int max = 0;
+        int maxArea = 0;
+
+        // Iterate one extra step with height 0 to process
+        // any bars remaining in the stack.
         for (int i = 0; i <= n; i++) {
-            int h = (i == n) ? 0 : heights[i];
-            while (!st.isEmpty() && h < heights[st.peek()]) {
-                int h1 = heights[st.pop()];
-                int w = (st.isEmpty()) ? i : i - st.peek() - 1;
-                max = Math.max(max, h1 * w);
+            int currentHeight = (i == n) ? 0 : heights[i];
+
+            // Pop taller bars because their rectangles end at index i.
+            while (!stack.isEmpty()
+                    && currentHeight < heights[stack.peek()]) {
+                int height = heights[stack.pop()];
+
+                // If the stack is empty, this bar spans from index 0 to i - 1.
+                // Otherwise, it spans from the index after the new stack top to i - 1.
+                int width = stack.isEmpty()
+                        ? i
+                        : i - stack.peek() - 1;
+
+                maxArea = Math.max(maxArea, height * width);
             }
-            st.push(i);
+
+            // Store the current bar's index.
+            stack.push(i);
         }
-        return max;
+
+        return maxArea;
     }
 }
