@@ -1,22 +1,41 @@
-class Solution {
-    public int numSubseq(int[] nums, int target) {
-        int res = 0, mod = 1000000007, l = 0, r = nums.length - 1;
-        List<Integer> pre = new ArrayList<>();
-        pre.add(1);
-        for (int i = 1; i <= nums.length; ++i) {
-            pre.add((pre.get(i - 1) << 1) % mod);
-        }
+import java.util.Arrays;
 
+class Solution {
+    private static final int MOD = 1_000_000_007;
+
+    public int numSubseq(int[] nums, int target) {
+        int n = nums.length;
+
+        // Sort so the smallest and largest values in a subsequence
+        // can be checked using two pointers.
         Arrays.sort(nums);
 
-        while (l <= r) {
-            if (nums[l] + nums[r] > target) {
-                r--;
+        // power[i] stores 2^i % MOD.
+        int[] power = new int[n];
+        power[0] = 1;
+
+        for (int i = 1; i < n; i++) {
+            power[i] = (power[i - 1] * 2) % MOD;
+        }
+
+        int left = 0;
+        int right = n - 1;
+        int result = 0;
+
+        while (left <= right) {
+            // If the smallest and largest values fit within the target,
+            // any subset of the elements between them can be selected.
+            if (nums[left] + nums[right] <= target) {
+                // There are 2^(right - left) ways to choose elements
+                // between left and right, with nums[left] included.
+                result = (result + power[right - left]) % MOD;
+                left++;
             } else {
-                res = (res + pre.get(r - l++)) % mod;
+                // The largest value is too large, so exclude it.
+                right--;
             }
         }
 
-        return res;
+        return result;
     }
 }
