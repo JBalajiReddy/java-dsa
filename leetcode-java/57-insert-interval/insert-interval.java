@@ -1,23 +1,30 @@
 class Solution {
     public int[][] insert(int[][] intervals, int[] newInterval) {
-        List<int[]> ls = new ArrayList<>();
-        int i = 0, n = intervals.length;
+        //already sorted
+        //we can apply merge interval on overlapping interval, rest interval can be added directly
+        int n = intervals.length;
+        List<int[]> res = new ArrayList<>();
+        int idx = 0;
 
-        //non-overlapping with newIntervals
-        while (i < n && intervals[i][1] < newInterval[0]) ls.add(intervals[i++]);
-
-        //merge overlapping intervals with newIntervals
-        while (i < n && intervals[i][0] <= newInterval[1]) {
-            newInterval[0] = Math.min(intervals[i][0], newInterval[0]);
-            newInterval[1] = Math.max(intervals[i][1], newInterval[1]);
-            i++;
+        //left non-over lapping portion
+        while (idx < n && intervals[idx][1] < newInterval[0]) {
+            res.add(intervals[idx]);
+            idx++;
         }
 
-        ls.add(newInterval);
+        //segemnt where over lapping might occur
+        while (idx < n && intervals[idx][0] <= newInterval[1]) {
+            newInterval[0] = Math.min(newInterval[0], intervals[idx][0]);
+            newInterval[1] = Math.max(newInterval[1], intervals[idx][1]);
+            idx++;
+        }
+        res.add(newInterval); //only add after merging all over lapping intervals
 
-        //remaining
-         while (i < n) ls.add(intervals[i++]);
-
-        return ls.toArray(new int[ls.size()][]);
+        //right non-overlapping portion
+        while (idx < n) {
+            res.add(intervals[idx]);
+            idx++;
+        }
+        return res.toArray(new int[res.size()][]);
     }
 }
