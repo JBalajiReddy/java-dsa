@@ -1,28 +1,35 @@
 class Solution {
     public int compress(char[] chars) {
         int n = chars.length;
-        if (n == 1)
-            return 1;
+        if (n == 1) return 1;
 
-        int idx = 0;
+        int idx = 0; // Write pointer: tracks destination index for compressed output
+        
         for (int i = 0; i < n; i++) {
             int count = 0;
             char curr = chars[i];
+
+            // Count contiguous occurrences of the current character
             while (i < n && curr == chars[i]) {
                 count++;
                 i++;
             }
-            if (count == 1)
-                chars[idx++] = curr;
-            else {
-                chars[idx++] = curr;
+
+            // Write the character
+            chars[idx++] = curr;
+
+            // Write count digits if count is greater than 1
+            if (count > 1) {
                 String num = String.valueOf(count);
-                for (char digit : num.toCharArray())
+                for (char digit : num.toCharArray()) {
                     chars[idx++] = digit;
+                }
             }
 
-            i--; //to balance the i++ inside the for loop
+            // Compensate for the outer loop's i++ step
+            i--; 
         }
-        return idx;
+
+        return idx; // Returns the new effective length of the array
     }
 }
