@@ -1,7 +1,7 @@
 class Solution {
     public int numDecodings(String s) {
         int n = s.length();
-        
+
         // DP Array Definition:
         // dp[i] represents the number of valid ways to decode the substring starting at index 'i' (s[i...n-1]).
         // The array size is n + 1 to handle the base case for an empty suffix at index 'n'.
@@ -42,6 +42,31 @@ class Solution {
 
         // Return total ways to decode the entire string starting from index 0.
         return dp[0];
+    }
+}
+
+class Solution1 {
+    public int numDecodings(String s) {
+        int n = s.length();
+
+        // Forward DP
+        int[] dp = new int[n + 1];
+        dp[0] = 1; // Base case: length 0
+
+        for (int i = 1; i <= n; i++) {
+            // Check single digit s[i-1]
+            if (s.charAt(i - 1) != '0') {
+                dp[i] += dp[i - 1];
+            }
+            // Check two digits s[i-2...i-1]
+            if (i >= 2) {
+                int twoDigit = Integer.parseInt(s.substring(i - 2, i));
+                if (twoDigit >= 10 && twoDigit <= 26) {
+                    dp[i] += dp[i - 2];
+                }
+            }
+        }
+        return dp[n];
     }
 }
 
